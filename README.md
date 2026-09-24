@@ -6,6 +6,9 @@
 
 ## Instructions
 
+>[!NOTE]
+>If you want to learn more about the project setup, see the [dedicated documentation](/assets/man/prj-setup.md).
+
 ## Technical Stack
 
 ## Resources

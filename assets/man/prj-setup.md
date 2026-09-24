@@ -6,3 +6,4 @@
 ## Setup
 1. Create a **New Android Project**.
 2. Select **Empty Views Activity** (this uses standard XML Views, making integration with 3D views like SceneView/Filament much simpler).
+![img](/assets/imgs/sp001.png)

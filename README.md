@@ -1,2 +1,1 @@
-# swifty-proteins
-Introduction to advanced mobile frameworks and application development.
+![img](assets/imgs/swifty-proteins.png)

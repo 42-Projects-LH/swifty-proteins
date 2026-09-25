@@ -1,11 +1,8 @@
-<?xml version="1.0" encoding="utf-8"?>
+
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <!-- Network permissions for downloading .cif files -->
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
-
-    <!-- Biometric authentication permission -->
     <uses-permission android:name="android.permission.USE_BIOMETRIC" />
 
     <application
@@ -18,7 +15,6 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.SwiftyProteins">
 
-        <!-- LoginActivity is configured as the LAUNCHER activity -->
         <activity
             android:name=".ui.auth.LoginActivity"
             android:exported="true">
@@ -27,6 +23,10 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <activity
+            android:name=".ui.protein.ProteinListActivity"
+            android:exported="false" />
 
         <activity
             android:name=".MainActivity"

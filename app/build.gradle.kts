@@ -29,6 +29,11 @@ android {
         sourceCompatibility = JavaVersion.VERSION_11
         targetCompatibility = JavaVersion.VERSION_11
     }
+
+    buildFeatures {
+        dataBinding = true
+        viewBinding = true
+    }
 }
 
 dependencies {
@@ -40,8 +45,13 @@ dependencies {
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.espresso.core)
     androidTestImplementation(libs.androidx.junit)
+    
     // Retrofit & OkHttp
     implementation("com.squareup.retrofit2:retrofit:2.9.0")
     implementation("com.squareup.retrofit2:converter-scalars:2.9.0")
     implementation("com.squareup.okhttp3:logging-interceptor:4.11.0")
+    
+    // Biometric & Security Crypto
+    implementation("androidx.biometric:biometric:1.1.0")
+    implementation("androidx.security:security-crypto:1.1.0-alpha06")
 }

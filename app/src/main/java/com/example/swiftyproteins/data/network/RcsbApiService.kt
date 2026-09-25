@@ -7,5 +7,5 @@ import retrofit2.http.Path
 interface RcsbApiService {
 
     @GET("ligands/view/{ligand}.cif")
-    suspend fun getLigandCif(@Path("ligand") ligandId: String): Response
+    suspend fun getLigandCif(@Path("ligand") ligandId: String): Response<String>
 }

@@ -7,19 +7,19 @@ import com.example.swiftyproteins.data.model.Molecule
 object CifParser {
 
     fun parse(ligandId: String, cifContent: String): Molecule {
-        val atoms = mutableListOf()
-        val bonds = mutableListOf()
+        val atoms = mutableListOf<Atom>()
+        val bonds = mutableListOf<Bond>()
 
         val lines = cifContent.lines()
         var inAtomLoop = false
         var inBondLoop = false
 
-        val atomHeaders = mutableListOf()
-        val bondHeaders = mutableListOf()
+        val atomHeaders = mutableListOf<String>()
+        val bondHeaders = mutableListOf<String>()
 
         for (line in lines) {
             val trimmed = line.trim()
-            if (trimmed.startsWith("#") || trimmed.isEmpty()) continue
+            if (trimmed.isEmpty() || trimmed.startsWith("#")) continue
 
             if (trimmed.startsWith("loop_")) {
                 inAtomLoop = false
@@ -27,7 +27,6 @@ object CifParser {
                 continue
             }
 
-            // Capture headers to handle column order dynamically
             if (trimmed.startsWith("_chem_comp_atom.")) {
                 inAtomLoop = true
                 atomHeaders.add(trimmed.substringAfter("_chem_comp_atom."))
@@ -40,13 +39,12 @@ object CifParser {
                 continue
             }
 
-            // Parse Atom rows
             if (inAtomLoop && atomHeaders.isNotEmpty()) {
                 if (trimmed.startsWith("_")) {
                     inAtomLoop = false
                     continue
                 }
-                val tokens = trimmed.split("\\s+".toRegex())
+                val tokens = trimmed.split(Regex("\\s+"))
                 val atomIdIdx = atomHeaders.indexOf("atom_id")
                 val symbolIdx = atomHeaders.indexOf("type_symbol")
                 val xIdx = atomHeaders.indexOf("model_Cartn_x")
@@ -64,13 +62,12 @@ object CifParser {
                 }
             }
 
-            // Parse Bond rows
             if (inBondLoop && bondHeaders.isNotEmpty()) {
                 if (trimmed.startsWith("_")) {
                     inBondLoop = false
                     continue
                 }
-                val tokens = trimmed.split("\\s+".toRegex())
+                val tokens = trimmed.split(Regex("\\s+"))
                 val atom1Idx = bondHeaders.indexOf("atom_id_1")
                 val atom2Idx = bondHeaders.indexOf("atom_id_2")
                 val typeIdx = bondHeaders.indexOf("value_order")

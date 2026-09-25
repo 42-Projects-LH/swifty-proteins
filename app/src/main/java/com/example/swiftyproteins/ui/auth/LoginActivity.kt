@@ -7,7 +7,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.biometric.BiometricManager
 import androidx.biometric.BiometricPrompt
 import androidx.core.content.ContextCompat
-import com.example.swiftyproteins.MainActivity
+import com.example.swiftyproteins.ui.protein.ProteinListActivity
 import com.example.swiftyproteins.databinding.ActivityLoginBinding
 import com.example.swiftyproteins.util.SecureStorage
 
@@ -99,7 +99,7 @@ class LoginActivity : AppCompatActivity() {
     }
 
     private fun proceedToApp() {
-        startActivity(Intent(this, MainActivity::class.java))
+        startActivity(Intent(this, ProteinListActivity::class.java))
         finish()
     }
 }

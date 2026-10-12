@@ -6,11 +6,11 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.swiftyproteins.databinding.ItemProteinBinding
 
 class ProteinAdapter(
-    private val originalList: List,
+    private val originalList: List<String>,
     private val onItemClick: (String) -> Unit
-) : RecyclerView.Adapter() {
+) : RecyclerView.Adapter<ProteinAdapter.ProteinViewHolder>() {
 
-    private var filteredList: List = originalList.toList()
+    private var filteredList: List<String> = originalList.toList()
 
     inner class ProteinViewHolder(val binding: ItemProteinBinding) :
         RecyclerView.ViewHolder(binding.root)

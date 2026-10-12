@@ -13,7 +13,7 @@ class ProteinListActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityProteinListBinding
     private lateinit var adapter: ProteinAdapter
-    private val proteinList: MutableList = mutableListOf()
+    private val proteinList: MutableList<String> = mutableListOf()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

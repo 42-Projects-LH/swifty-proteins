@@ -4,6 +4,7 @@ import android.content.Context
 import androidx.security.crypto.EncryptedSharedPreferences
 import androidx.security.crypto.MasterKey
 import java.security.MessageDigest
+import java.security.SecureRandom
 
 class SecureStorage(context: Context) {
 
@@ -20,8 +21,24 @@ class SecureStorage(context: Context) {
     )
 
     companion object {
-        fun hashPassword(password: String): String {
+        private const val SALT_LENGTH_BYTES = 16
+
+        /**
+         * Generates a 16-byte (128-bit) cryptographically secure pseudo-random salt.
+         */
+        fun generateSalt(): String {
+            val random = SecureRandom()
+            val salt = ByteArray(SALT_LENGTH_BYTES)
+            random.nextBytes(salt)
+            return salt.joinToString("") { "%02x".format(it) }
+        }
+
+        /**
+         * Computes a cryptographic SHA-256 hash using salt + password.
+         */
+        fun hashPassword(password: String, saltHex: String): String {
             val digest = MessageDigest.getInstance("SHA-256")
+            digest.update(saltHex.toByteArray(Charsets.UTF_8))
             val hashBytes = digest.digest(password.toByteArray(Charsets.UTF_8))
             return hashBytes.joinToString("") { "%02x".format(it) }
         }
@@ -37,12 +54,15 @@ class SecureStorage(context: Context) {
         if (isUserRegistered(normalized)) {
             return false
         }
-        val passwordHash = hashPassword(password)
+        val salt = generateSalt()
+        val passwordHash = hashPassword(password, salt)
+        val storedRecord = "$salt:$passwordHash"
+
         val users = getAllUsernames().toMutableSet()
         users.add(normalized)
 
         sharedPreferences.edit()
-            .putString("pwd_hash_$normalized", passwordHash)
+            .putString("pwd_hash_$normalized", storedRecord)
             .putStringSet("all_users", users)
             .putString("last_user", normalized)
             .apply()
@@ -51,8 +71,31 @@ class SecureStorage(context: Context) {
 
     fun validateCredentials(username: String, password: String): Boolean {
         val normalized = username.lowercase().trim()
-        val storedHash = sharedPreferences.getString("pwd_hash_$normalized", null) ?: return false
-        val isValid = hashPassword(password) == storedHash
+        val storedRecord = sharedPreferences.getString("pwd_hash_$normalized", null) ?: return false
+
+        val isValid = if (storedRecord.contains(":")) {
+            val parts = storedRecord.split(":", limit = 2)
+            val salt = parts[0]
+            val expectedHash = parts[1]
+            hashPassword(password, salt) == expectedHash
+        } else {
+            // Backward compatibility with legacy unsalted hashes:
+            // Verify against legacy SHA-256, and if valid, seamlessly upgrade record with fresh salt.
+            val legacyDigest = MessageDigest.getInstance("SHA-256")
+            val legacyHash = legacyDigest.digest(password.toByteArray(Charsets.UTF_8))
+                .joinToString("") { "%02x".format(it) }
+            if (legacyHash == storedRecord) {
+                val newSalt = generateSalt()
+                val newHash = hashPassword(password, newSalt)
+                sharedPreferences.edit()
+                    .putString("pwd_hash_$normalized", "$newSalt:$newHash")
+                    .apply()
+                true
+            } else {
+                false
+            }
+        }
+
         if (isValid) {
             setLastUser(normalized)
         }

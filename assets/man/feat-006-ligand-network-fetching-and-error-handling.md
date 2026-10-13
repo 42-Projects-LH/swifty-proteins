@@ -24,10 +24,11 @@ Handles remote acquisition of molecular structure data in PDBx/mmCIF format from
   suspend fun getLigandCif(@Path("ligand") ligandId: String): Response<String>
   ```
 * **Asynchronous Execution**:
-  * Kotlin Coroutines launched within `lifecycleScope`.
+  * Kotlin Coroutines launched within `lifecycleScope` on `Dispatchers.IO`.
+  * Background parsing performed on `Dispatchers.Default` using `CifParser`.
 * **State Management**:
-  * **Loading**: `binding.progressBar.visibility = View.VISIBLE`, UI interaction locked.
-  * **Success**: Dismiss spinner $\rightarrow$ parse CIF via `CifParser` $\rightarrow$ launch 3D viewer.
+  * **Loading**: `binding.loadingOverlay.visibility = View.VISIBLE` with dynamic text (`"Fetching <ID> from RCSB..."`), touch events locked via dimmed scrim.
+  * **Success**: Dismiss spinner $\rightarrow$ parse CIF via `CifParser` $\rightarrow$ proceed to 3D visualization.
   * **Error**: Dismiss spinner $\rightarrow$ present `AlertDialog` with user-friendly error description.
 
 ---
@@ -35,13 +36,19 @@ Handles remote acquisition of molecular structure data in PDBx/mmCIF format from
 ## Error Scenarios Handled
 | Failure Cause | Diagnostic / Detection | Alert Dialog Presentation |
 | :--- | :--- | :--- |
-| **No Internet Connection** | `UnknownHostException` / `IOException` | "Network Error: Please check your internet connection." |
-| **Ligand Not Found (404)** | HTTP 404 response code | "Not Found: Ligand data for '{ID}' is unavailable on RCSB." |
-| **Server Timeout** | `SocketTimeoutException` | "Timeout Error: RCSB server took too long to respond." |
-| **Parsing Failure** | Empty atom array returned | "Parse Error: Could not extract 3D molecular coordinates." |
+| **No Internet Connection / Offline** | `UnknownHostException` / `IOException` | "Network Error: Unable to connect to RCSB PDB server. Please check your internet connection." |
+| **Ligand Not Found (404)** | HTTP 404 response code | "Loading Failed: Ligand '{ID}' was not found on the RCSB database (HTTP 404)." |
+| **Server Timeout** | `SocketTimeoutException` | "Connection Timeout: The request to download ligand '{ID}' timed out. Please try again." |
+| **Parsing Failure** | Empty atom array returned | "Parsing Error: The ligand '{ID}' does not contain readable 3D coordinate atoms in its CIF record." |
 
 ---
 
 ## Verification & Testing
-1. Test normal fetch: Select "ATP" with active Wi-Fi; confirm loading spinner displays while fetching, then opens viewer.
-2. Test offline mode: Turn on Airplane mode $\rightarrow$ select any ligand $\rightarrow$ confirm spinner shows briefly then error alert popup appears explaining network failure.
+1. **Online Verification**:
+   * Connect to Wi-Fi/mobile data $\rightarrow$ tap a ligand (e.g. `ATP`).
+   * Observed result: Centered spinning wheel overlay appears with status text `"Fetching ATP from RCSB..."`, displaying during the network transfer, followed by successful parsing.
+2. **Offline Verification (Airplane Mode)**:
+   * Enable Airplane Mode $\rightarrow$ tap any ligand in the list.
+   * Observed result: Because the OS detects network disconnection instantly, DNS resolution immediately throws an `UnknownHostException` without waiting for the 15s timeout. The loading overlay is instantly dismissed and the modal Alert Dialog ("Network Error: Unable to connect to RCSB PDB server...") appears right away.
+   * *Note on Instantaneous Alert*: This immediate alert display is expected Android socket behavior when offline (fail-fast architecture), ensuring users are never left waiting on unnecessary timeouts when there is no network connection.
+

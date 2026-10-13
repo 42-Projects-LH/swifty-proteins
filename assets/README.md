@@ -58,7 +58,7 @@ The following features constitute the mandatory part of the evaluation. All item
   * Remote structure fetching from RCSB PDB in `.cif` format (`https://files.rcsb.org/ligands/view/{ligand}.cif`).
   * Visible spinning wheel loading animation (`ProgressBar`) during asynchronous download.
   * Warning alert popup describing the exact failure cause (offline, timeout, HTTP 404, parse error).
-  * Status: **In Progress**
+  * Status: **Completed**
 
 ### Section IV: Third View — 3D Molecular Visualization
 * [**`feat-007-3d-molecular-visualization.md`**](man/feat-007-3d-molecular-visualization.md) — **3D Molecular Visualization (Ball-and-Stick Model)**

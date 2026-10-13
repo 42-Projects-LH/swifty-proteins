@@ -25,6 +25,18 @@ class ProteinListActivity : AppCompatActivity() {
         setupSearchView()
     }
 
+    override fun onResume() {
+        super.onResume()
+        if (com.example.swiftyproteins.SwiftyProteinsApp.isSessionLocked) {
+            com.example.swiftyproteins.SwiftyProteinsApp.isSessionLocked = false
+            val intent = android.content.Intent(this, com.example.swiftyproteins.ui.auth.LoginActivity::class.java).apply {
+                flags = android.content.Intent.FLAG_ACTIVITY_NEW_TASK or android.content.Intent.FLAG_ACTIVITY_CLEAR_TOP
+            }
+            startActivity(intent)
+            finish()
+        }
+    }
+
     private fun loadLigandsFromAssets() {
         try {
             val inputStream = assets.open("ligands.txt")

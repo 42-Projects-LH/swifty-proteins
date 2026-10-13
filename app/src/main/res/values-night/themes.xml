@@ -2,6 +2,13 @@
     <!-- Base application theme. -->
     <style name="Base.Theme.SwiftyProteins" parent="Theme.Material3.DayNight.NoActionBar">
         <!-- Customize your dark theme here. -->
-        <!-- <item name="colorPrimary">@color/my_dark_primary</item> -->
+    </style>
+
+    <!-- Dedicated Splash Theme in Night Mode -->
+    <style name="Theme.SwiftyProteins.Splash" parent="Theme.Material3.DayNight.NoActionBar">
+        <item name="android:windowIsTranslucent">true</item>
+        <item name="android:windowBackground">@android:color/transparent</item>
+        <item name="android:statusBarColor">#01EFFE</item>
+        <item name="android:navigationBarColor">#FE2F63</item>
     </style>
 </resources>

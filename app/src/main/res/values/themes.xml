@@ -2,8 +2,15 @@
     <!-- Base application theme. -->
     <style name="Base.Theme.SwiftyProteins" parent="Theme.Material3.DayNight.NoActionBar">
         <!-- Customize your light theme here. -->
-        <!-- <item name="colorPrimary">@color/my_light_primary</item> -->
     </style>
 
     <style name="Theme.SwiftyProteins" parent="Base.Theme.SwiftyProteins" />
+
+    <!-- Dedicated Splash Theme that disables the solid OS preview screen so only the gradient is shown -->
+    <style name="Theme.SwiftyProteins.Splash" parent="Theme.Material3.DayNight.NoActionBar">
+        <item name="android:windowIsTranslucent">true</item>
+        <item name="android:windowBackground">@android:color/transparent</item>
+        <item name="android:statusBarColor">#01EFFE</item>
+        <item name="android:navigationBarColor">#FE2F63</item>
+    </style>
 </resources>

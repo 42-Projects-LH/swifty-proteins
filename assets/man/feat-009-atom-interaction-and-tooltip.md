@@ -1,4 +1,4 @@
-# Feature: Atom Interaction & Tooltip Display
+# Feature: Atom Interaction & Information Tooltip
 
 ## Overview
 Enables interactive exploration of molecular structures by allowing users to tap on individual atoms in the 3D scene to inspect chemical metadata, with automatic dismissal upon tapping elsewhere.
@@ -13,36 +13,29 @@ Enables interactive exploration of molecular structures by allowing users to tap
 ---
 
 ## Technical Specifications
-* **3D Hit-Testing (Raycasting / Color-Picking)**:
-  * **Option A: Raycasting**:
-    * Computes a ray from camera position through the normalized device coordinates (NDC) corresponding to the screen tap $(x_{tap}, y_{tap})$.
-    * Tests intersection between the ray and bounding spheres of all atoms in the molecule:
-      $$\|\mathbf{p}_{atom} - (\mathbf{r}_0 + t \mathbf{d})\|^2 \le r_{sphere}^2$$
-    * Identifies the closest intersecting atom (smallest $t > 0$).
-  * **Option B: ID Color Picking**:
-    * Renders an off-screen pass where each atom is shaded with an encoded RGB color ID.
-    * Reads pixel at touch position to resolve exact atom index in $O(1)$ time.
-* **UI Tooltip Presentation**:
-  * An animated Material card overlay positioned over the 3D view (or pinned to screen top/bottom).
+* **3D Raycasting Engine (`RaycastPicker.kt`)**:
+  1. Converts screen touch $(x, y)$ to Normalized Device Coordinates (NDC) in $[-1, 1]$.
+  2. Multiplies clip near $(z=-1)$ and clip far $(z=+1)$ points by the inverse of $(P \times V \times M)$ to determine the 3D ray in centered molecule space:
+     $$\mathbf{O} = \mathbf{P}_{near}, \quad \hat{\mathbf{D}} = \frac{\mathbf{P}_{far} - \mathbf{P}_{near}}{\|\mathbf{P}_{far} - \mathbf{P}_{near}\|}$$
+  3. Tests ray-sphere intersection against all atoms:
+     $$\|\mathbf{O} + t \hat{\mathbf{D}} - \mathbf{C}_i\|^2 \le R_i^2$$
+  4. Resolves the closest intersected atom (smallest $t > 0$). Includes mobile touch padding ($\Delta r = 0.25\text{Å}$) for ease of targeting smaller atoms like hydrogen.
+* **Visual Selection Halo**:
+  * Tapped atom is surrounded by an additive glowing translucent cyan selection halo in the 3D view.
+* **UI Tooltip Card (`cardAtomInfo`)**:
+  * Clean elevated card overlay at the bottom of the screen.
   * Displays:
-    * Element Symbol & Name (e.g., "Carbon (C)")
-    * Atom Identifier (e.g., "Atom ID: C1")
-    * Spatial Coordinates: $(X, Y, Z)$
-* **Dismissal Logic**:
-  * Any tap that does not intersect an atom hides the tooltip overlay.
-
----
-
-## User Flow
-1. User spots an oxygen atom (red sphere) in the 3D viewer.
-2. User taps the red sphere.
-3. A clean tooltip appears: `"Oxygen (O) - ID: O1"`.
-4. User taps on empty space in the background.
-5. The tooltip smoothly dismisses.
+    * CPK Color badge showing the atom's chemical tint.
+    * Full element name and symbol: `"Oxygen (O)"`, `"Carbon (C)"`, `"Nitrogen (N)"`.
+    * Atom ID from the CIF structure: `"Atom ID: C1"`.
+    * Precise 3D Cartesian coordinates: `"Coordinates: X: 1.234 | Y: -0.567 | Z: 2.890"`.
+* **Automatic Dismissal**:
+  * If a tap hits the background void (no atom intersected), `onAtomSelectedListener(null)` is triggered, hiding the card and clearing the selection halo.
+  * A dedicated close icon (`btnCloseTooltip`) is also available on the card.
 
 ---
 
 ## Verification & Testing
-1. Tap various atoms: Tap carbon, nitrogen, and oxygen spheres; verify tooltip appears showing correct symbols and IDs.
-2. Tap outside: Tap background void; verify tooltip immediately disappears.
-3. Tap another atom: Tap atom A, then atom B; verify tooltip updates to atom B without needing manual dismissal first.
+1. **Atom Tap**: Tapped atoms in `ATP` (e.g. `H5'`, `O`, `P`); verified tooltip card opens immediately with full element name, ID, and coordinates.
+2. **Background Tap**: Tapped empty background void; verified tooltip dismisses immediately.
+3. **Sequential Taps**: Tapped from one atom directly to another; verified tooltip smoothly updates without requiring manual dismissal.

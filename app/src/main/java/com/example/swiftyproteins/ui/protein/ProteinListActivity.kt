@@ -10,10 +10,12 @@ import androidx.appcompat.widget.SearchView
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.swiftyproteins.SwiftyProteinsApp
+import com.example.swiftyproteins.data.model.MoleculeHolder
 import com.example.swiftyproteins.data.network.NetworkClient
 import com.example.swiftyproteins.data.parser.CifParser
 import com.example.swiftyproteins.databinding.ActivityProteinListBinding
 import com.example.swiftyproteins.ui.auth.LoginActivity
+import com.example.swiftyproteins.ui.viewer.ProteinViewerActivity
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -120,7 +122,9 @@ class ProteinListActivity : AppCompatActivity() {
                         Toast.LENGTH_SHORT
                     ).show()
 
-                    // Next milestone: transition to ProteinViewerActivity
+                    MoleculeHolder.currentMolecule = molecule
+                    val viewerIntent = Intent(this@ProteinListActivity, ProteinViewerActivity::class.java)
+                    startActivity(viewerIntent)
                 } else {
                     binding.loadingOverlay.visibility = View.GONE
                     val code = response.code()

@@ -65,25 +65,25 @@ The following features constitute the mandatory part of the evaluation. All item
   * Native in-app 3D rendering pipeline (spheres for atoms, cylinders for chemical bonds).
   * Normalized bounding box and automatic camera centering.
   * Standard CPK chemical coloring (C: Gray, H: White, O: Red, N: Blue, S: Yellow, P: Orange, Halogens: Green).
-  * Status: **Pending**
+  * Status: **Completed**
 
 * [**`feat-008-gesture-controls-and-camera.md`**](man/feat-008-gesture-controls-and-camera.md) — **Gesture Controls & Camera Manipulation**
   * 1-finger swipe/drag smooth 3D rotation (trackball / orbit controls).
   * 2-finger pinch gesture for responsive zoom in and out.
   * Fluid, lag-free performance targeting consistent 60 FPS.
-  * Status: **Pending**
+  * Status: **Completed**
 
 * [**`feat-009-atom-interaction-and-tooltip.md`**](man/feat-009-atom-interaction-and-tooltip.md) — **Atom Interaction & Tooltip Display**
   * 3D raycasting and object picking when tapping an atom.
   * Informational tooltip card displaying atom symbol, name, and coordinate data.
   * Automatic tooltip dismissal when tapping anywhere else on the screen.
-  * Status: **Pending**
+  * Status: **Completed**
 
 * [**`feat-010-model-sharing-and-gallery-export.md`**](man/feat-010-model-sharing-and-gallery-export.md) — **Model Sharing & Gallery Export**
   * In-view Share button capturing the active 3D framebuffer.
   * System share sheet integration via Android `Intent.ACTION_SEND` and `FileProvider`.
   * Direct image export to the device's photo album/gallery via Android `MediaStore` API.
-  * Status: **Pending**
+  * Status: **Completed**
 
 ---
 
@@ -93,6 +93,7 @@ Evaluated only after all mandatory features have been verified and scored perfec
 
 * [**`bonus-001-multiple-visualization-models.md`**](man/bonus-001-multiple-visualization-models.md) — **Multiple Visualization Models**
   * Dynamic switching between Ball-and-Stick, Space-Filling (van der Waals radius), Wireframe, and Stick representations.
+  * Status: **Completed**
 * [**`bonus-002-advanced-user-interface.md`**](man/bonus-002-advanced-user-interface.md) — **Advanced User Interface**
   * Custom list cells, smooth transition animations, and dark mode support.
 * [**`bonus-003-enhanced-molecular-interactions.md`**](man/bonus-003-enhanced-molecular-interactions.md) — **Enhanced Molecular Interactions**

@@ -23,6 +23,7 @@ out/
 # OS generated files
 .DS_Store
 Thumbs.db
+screenshots/
 
 # Kotlin Gradle plugin data
 .kotlin/

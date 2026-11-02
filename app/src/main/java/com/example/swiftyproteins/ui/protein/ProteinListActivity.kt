@@ -10,6 +10,7 @@ import androidx.appcompat.widget.SearchView
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.swiftyproteins.SwiftyProteinsApp
+import com.example.swiftyproteins.data.cache.CifCache
 import com.example.swiftyproteins.data.model.MoleculeHolder
 import com.example.swiftyproteins.data.network.NetworkClient
 import com.example.swiftyproteins.data.parser.CifParser
@@ -69,11 +70,17 @@ class ProteinListActivity : AppCompatActivity() {
     }
 
     private fun setupRecyclerView() {
-        adapter = ProteinAdapter(proteinList) { selectedProtein ->
+        adapter = ProteinAdapter(this, proteinList) { selectedProtein ->
             onProteinSelected(selectedProtein)
         }
         binding.rvProteins.layoutManager = LinearLayoutManager(this)
         binding.rvProteins.adapter = adapter
+
+        binding.btnFavoritesFilter.setOnClickListener {
+            val active = binding.btnFavoritesFilter.isSelected
+            binding.btnFavoritesFilter.isSelected = !active
+            adapter.setShowFavoritesOnly(!active)
+        }
     }
 
     private fun setupSearchView() {
@@ -90,50 +97,57 @@ class ProteinListActivity : AppCompatActivity() {
     }
 
     private fun onProteinSelected(proteinId: String) {
-        // Show spinning wheel loading overlay
         binding.loadingOverlay.visibility = View.VISIBLE
-        binding.tvLoadingMessage.text = "Fetching $proteinId from RCSB..."
+        binding.tvLoadingMessage.text = "Loading $proteinId..."
 
         lifecycleScope.launch {
             try {
-                val response = withContext(Dispatchers.IO) {
-                    NetworkClient.apiService.getLigandCif(proteinId)
-                }
-
-                if (response.isSuccessful && !response.body().isNullOrEmpty()) {
-                    val cifContent = response.body()!!
-                    val molecule = withContext(Dispatchers.Default) {
-                        CifParser.parse(proteinId, cifContent)
+                val cifContent: String = if (CifCache.has(this@ProteinListActivity, proteinId)) {
+                    withContext(Dispatchers.IO) {
+                        CifCache.read(this@ProteinListActivity, proteinId)!!
                     }
-
-                    binding.loadingOverlay.visibility = View.GONE
-
-                    if (molecule.atoms.isEmpty()) {
-                        showWarningDialog(
-                            title = "Parsing Error",
-                            message = "The ligand '$proteinId' does not contain readable 3D coordinate atoms in its CIF record."
-                        )
+                } else {
+                    binding.tvLoadingMessage.text = "Fetching $proteinId from RCSB..."
+                    val response = withContext(Dispatchers.IO) {
+                        NetworkClient.apiService.getLigandCif(proteinId)
+                    }
+                    if (!response.isSuccessful || response.body().isNullOrEmpty()) {
+                        binding.loadingOverlay.visibility = View.GONE
+                        val code = response.code()
+                        val errorMsg = when (code) {
+                            404 -> "Ligand '$proteinId' was not found on the RCSB database (HTTP 404)."
+                            else -> "Failed to load ligand '$proteinId' from server (HTTP $code: ${response.message()})."
+                        }
+                        showWarningDialog("Loading Failed", errorMsg)
                         return@launch
                     }
-
-                    Toast.makeText(
-                        this@ProteinListActivity,
-                        "Loaded $proteinId: ${molecule.atoms.size} atoms, ${molecule.bonds.size} bonds",
-                        Toast.LENGTH_SHORT
-                    ).show()
-
-                    MoleculeHolder.currentMolecule = molecule
-                    val viewerIntent = Intent(this@ProteinListActivity, ProteinViewerActivity::class.java)
-                    startActivity(viewerIntent)
-                } else {
-                    binding.loadingOverlay.visibility = View.GONE
-                    val code = response.code()
-                    val errorMsg = when (code) {
-                        404 -> "Ligand '$proteinId' was not found on the RCSB database (HTTP 404)."
-                        else -> "Failed to load ligand '$proteinId' from server (HTTP $code: ${response.message()})."
-                    }
-                    showWarningDialog("Loading Failed", errorMsg)
+                    val body = response.body()!!
+                    withContext(Dispatchers.IO) { CifCache.write(this@ProteinListActivity, proteinId, body) }
+                    body
                 }
+
+                val molecule = withContext(Dispatchers.Default) {
+                    CifParser.parse(proteinId, cifContent)
+                }
+
+                binding.loadingOverlay.visibility = View.GONE
+
+                if (molecule.atoms.isEmpty()) {
+                    showWarningDialog(
+                        title = "Parsing Error",
+                        message = "The ligand '$proteinId' does not contain readable 3D coordinate atoms in its CIF record."
+                    )
+                    return@launch
+                }
+
+                Toast.makeText(
+                    this@ProteinListActivity,
+                    "Loaded $proteinId: ${molecule.atoms.size} atoms, ${molecule.bonds.size} bonds",
+                    Toast.LENGTH_SHORT
+                ).show()
+
+                MoleculeHolder.currentMolecule = molecule
+                startActivity(Intent(this@ProteinListActivity, ProteinViewerActivity::class.java))
             } catch (e: UnknownHostException) {
                 binding.loadingOverlay.visibility = View.GONE
                 showWarningDialog(

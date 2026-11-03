@@ -50,20 +50,34 @@ class ProteinViewerActivity : AppCompatActivity() {
         // Pass molecule structure to OpenGL renderer
         binding.glSurfaceView.renderer.setMolecule(molecule)
 
-        // Setup Atom Selection and Tooltip handling
+        // Setup Atom Selection, Tooltip and element highlight
         binding.glSurfaceView.onAtomSelectedListener = { atom ->
             runOnUiThread {
                 if (atom != null) {
                     showAtomTooltip(atom)
+                    binding.glSurfaceView.renderer.highlightElement = atom.symbol
                 } else {
                     hideAtomTooltip()
+                    binding.glSurfaceView.renderer.highlightElement = null
                 }
             }
         }
 
         binding.btnCloseTooltip.setOnClickListener {
             binding.glSurfaceView.renderer.selectedAtom = null
+            binding.glSurfaceView.renderer.highlightElement = null
             hideAtomTooltip()
+        }
+
+        // Wire up atom label overlay — share the same centerOffset array as the renderer
+        binding.atomLabelOverlay.renderer = binding.glSurfaceView.renderer
+        binding.atomLabelOverlay.centerOffset = binding.glSurfaceView.renderer.centerOffset
+        binding.atomLabelOverlay.atoms = molecule.atoms
+
+        binding.btnToggleLabels.setOnClickListener {
+            val nowEnabled = !binding.atomLabelOverlay.showLabels
+            binding.atomLabelOverlay.showLabels = nowEnabled
+            binding.btnToggleLabels.alpha = if (nowEnabled) 1f else 0.45f
         }
 
         // Back Navigation
@@ -110,8 +124,9 @@ class ProteinViewerActivity : AppCompatActivity() {
         Toast.makeText(this, "Exporting 3D snapshot...", Toast.LENGTH_SHORT).show()
 
         binding.glSurfaceView.renderer.requestScreenshot { bitmap ->
+            val mol = MoleculeHolder.currentMolecule
             saveToPhotoAlbum(bitmap, ligandName)
-            shareBitmap(bitmap, ligandName)
+            shareBitmap(bitmap, ligandName, mol?.molecularFormula, mol?.atoms?.size, mol?.bonds?.size)
         }
     }
 
@@ -144,7 +159,13 @@ class ProteinViewerActivity : AppCompatActivity() {
         }
     }
 
-    private fun shareBitmap(bitmap: Bitmap, ligandName: String) {
+    private fun shareBitmap(
+        bitmap: Bitmap,
+        ligandName: String,
+        formula: String? = null,
+        atomCount: Int? = null,
+        bondCount: Int? = null
+    ) {
         try {
             val cacheDir = File(cacheDir, "images").apply { mkdirs() }
             val shareFile = File(cacheDir, "shared_protein_${ligandName}.png")
@@ -158,14 +179,20 @@ class ProteinViewerActivity : AppCompatActivity() {
                 shareFile
             )
 
+            val shareText = buildString {
+                appendLine("🔬 Ligand: $ligandName")
+                if (formula != null) appendLine("Formula: $formula")
+                if (atomCount != null && bondCount != null)
+                    appendLine("Structure: $atomCount atoms · $bondCount bonds")
+                appendLine()
+                append("Rendered with Swifty Proteins — RCSB PDB")
+            }
+
             val shareIntent = Intent(Intent.ACTION_SEND).apply {
                 type = "image/png"
                 putExtra(Intent.EXTRA_STREAM, contentUri)
-                putExtra(Intent.EXTRA_SUBJECT, "Swifty Proteins: $ligandName")
-                putExtra(
-                    Intent.EXTRA_TEXT,
-                    "3D Molecular structure for ligand $ligandName rendered with Swifty Proteins."
-                )
+                putExtra(Intent.EXTRA_SUBJECT, "Swifty Proteins: $ligandName ($formula)")
+                putExtra(Intent.EXTRA_TEXT, shareText)
                 addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
             }
 

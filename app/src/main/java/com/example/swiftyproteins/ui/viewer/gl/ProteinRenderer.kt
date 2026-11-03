@@ -29,7 +29,7 @@ class ProteinRenderer : GLSurfaceView.Renderer {
     // Molecule Data
     @Volatile
     private var molecule: Molecule? = null
-    private val centerOffset = FloatArray(3)
+    val centerOffset = FloatArray(3)
     private var boundingRadius = 5.0f
 
     // Camera & Transform Parameters
@@ -64,13 +64,17 @@ class ProteinRenderer : GLSurfaceView.Renderer {
     var surfaceHeight = 1
         private set
 
-    // Matrices
-    private val projectionMatrix = FloatArray(16)
-    private val viewMatrix = FloatArray(16)
-    private val modelMatrix = FloatArray(16)
+    // Matrices (exposed for AtomLabelOverlay projection)
+    val projectionMatrix = FloatArray(16)
+    val viewMatrix = FloatArray(16)
+    val modelMatrix = FloatArray(16)
     private val mvMatrix = FloatArray(16)
     private val mvpMatrix = FloatArray(16)
     private val tempMatrix = FloatArray(16)
+
+    // Element type to highlight (all atoms with same symbol get a secondary glow)
+    @Volatile
+    var highlightElement: String? = null
 
     // Meshes & Shaders
     private var sphereMesh: SphereMesh? = null
@@ -349,6 +353,16 @@ class ProteinRenderer : GLSurfaceView.Renderer {
             drawAtomHighlight(sel)
         }
 
+        // Draw element-type highlight for all atoms sharing the same element
+        val elemHighlight = highlightElement
+        if (elemHighlight != null) {
+            for (atom in mol.atoms) {
+                if (atom.symbol.equals(elemHighlight, ignoreCase = true) && atom != selectedAtom) {
+                    drawElementHighlight(atom)
+                }
+            }
+        }
+
         // Handle screenshot capture if requested
         val cb = pendingScreenshotCallback
         if (cb != null) {
@@ -511,6 +525,35 @@ class ProteinRenderer : GLSurfaceView.Renderer {
         val glowColor = floatArrayOf(0.01f, 0.94f, 1.0f, 0.45f)
         GLES20.glUniform4fv(uColorHandle, 1, glowColor, 0)
 
+        sphere.draw(aPositionHandle, aNormalHandle)
+
+        GLES20.glDisable(GLES20.GL_BLEND)
+        GLES20.glEnable(GLES20.GL_CULL_FACE)
+    }
+
+    private fun drawElementHighlight(atom: Atom) {
+        val sphere = sphereMesh ?: return
+        val cx = centerOffset[0]; val cy = centerOffset[1]; val cz = centerOffset[2]
+
+        val r = (if (renderModel == RenderModel.SPACE_FILLING) atom.vdwRadius else atom.ballRadius) * 1.25f
+        val x = atom.x - cx; val y = atom.y - cy; val z = atom.z - cz
+
+        GLES20.glEnable(GLES20.GL_BLEND)
+        GLES20.glBlendFunc(GLES20.GL_SRC_ALPHA, GLES20.GL_ONE)
+        GLES20.glDisable(GLES20.GL_CULL_FACE)
+
+        GLES20.glUseProgram(litProgram)
+        Matrix.multiplyMM(tempMatrix, 0, modelMatrix, 0, createTranslateScaleMatrix(x, y, z, r), 0)
+        Matrix.multiplyMM(mvMatrix, 0, viewMatrix, 0, tempMatrix, 0)
+        Matrix.multiplyMM(mvpMatrix, 0, projectionMatrix, 0, mvMatrix, 0)
+
+        GLES20.glUniformMatrix4fv(uMVPMatrixHandle, 1, false, mvpMatrix, 0)
+        GLES20.glUniformMatrix4fv(uMVMatrixHandle, 1, false, mvMatrix, 0)
+        GLES20.glUniform3fv(uLightPosHandle, 1, lightPositionEye, 0)
+        GLES20.glUniform1f(uShininessHandle, 32.0f)
+
+        // White-gold glow to distinguish from the cyan selected halo
+        GLES20.glUniform4fv(uColorHandle, 1, floatArrayOf(1.0f, 0.85f, 0.2f, 0.35f), 0)
         sphere.draw(aPositionHandle, aNormalHandle)
 
         GLES20.glDisable(GLES20.GL_BLEND)

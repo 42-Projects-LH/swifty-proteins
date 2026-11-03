@@ -1,7 +1,11 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
     <!-- Base application theme. -->
     <style name="Base.Theme.SwiftyProteins" parent="Theme.Material3.DayNight.NoActionBar">
-        <!-- Customize your light theme here. -->
+        <item name="android:windowBackground">@color/surface_light</item>
+        <item name="colorSurface">@color/card_light</item>
+        <item name="colorOnSurface">@color/on_surface_light</item>
+        <item name="colorPrimary">@color/cyan_accent</item>
+        <item name="colorSecondary">@color/pink_accent</item>
     </style>
 
     <style name="Theme.SwiftyProteins" parent="Base.Theme.SwiftyProteins" />

@@ -1,7 +1,5 @@
 # Multiple Visualization Models
 
-## Overview
-
 The **Multiple Visualization Models** bonus feature expands the rendering pipeline beyond the mandatory Ball-and-Stick model by providing four distinct molecular representations recognized in structural biology:
 1. **Ball & Stick** (Mandatory baseline)
 2. **Space-Filling (CPK / Calotte Model)**
@@ -10,11 +8,16 @@ The **Multiple Visualization Models** bonus feature expands the rendering pipeli
 
 Users can cycle dynamically between representations with a single tap of an on-screen UI control. Model transitions occur instantaneously in memory without reloading, re-parsing, or re-downloading the molecule data.
 
----
+## General Requirements
+
+- Multiple molecular visualization models beyond Ball-and-Stick.
+- User can switch between Space-Filling, Stick, and Wireframe via an accessible UI control.
+- Model switching operates smoothly in-place without reloading or network requests.
+- Each representation strictly follows chemical and molecular visualization conventions.
 
 ## Model Specifications
 
-### 1. Space-Filling Model (CPK Model)
+### Space-Filling Model (CPK Model)
 - **Concept**: Depicts atoms as solid spheres sized proportionally to their empirical **Van der Waals (vdW)** radii.
 - **Visual Appearance**: Overlapping atomic spheres showing the true steric hindrance and volumetric surface boundary of the molecule. Chemical bonds are fully enveloped within the atom volumes and are omitted from rendering.
 - **Physical Accuracy**: Uses standard Bondi and IUPAC van der Waals radii defined in `Atom.vdwRadius`:
@@ -29,25 +32,23 @@ Users can cycle dynamically between representations with a single tap of an on-s
   - Iron ($Fe$): $2.00\text{ \AA}$
 - **Adaptive Raycasting**: When the Space-Filling model is active, `RaycastPicker` automatically expands its hit-detection radii to match the vdW sphere boundaries.
 
-### 2. Stick Model (Licorice Model)
+### Stick Model (Licorice Model)
 - **Concept**: Prioritizes bond topology and chemical connectivity over individual atom sizes.
 - **Visual Appearance**: Renders covalent bonds as thick 3D cylinders (`bondRadius = 0.22f`) connected at atom junctions with small spherical caps (`capRadius = 0.22f`) carrying the respective atom's CPK color.
 - **Use Case**: Preferred by biochemists for examining complex ring systems, aromatic rings, and large macrocycles without atom spheres obscuring back-facing bonds.
 
-### 3. Wireframe Model
+### Wireframe Model
 - **Concept**: Ultra-lightweight skeletal line rendering illustrating purely the bonding network.
 - **Visual Appearance**:
   - Uses native OpenGL ES line primitives (`GLES20.glDrawArrays(GL_LINES)` with line width $3.0\text{f}$).
   - Shaded with a glowing cyan line shader (`#02F0FF`) and tiny atom position nodes (`capRadius = 0.15f`).
 - **Performance**: Extremely lightweight geometry ideal for low-end GPU hardware or massive macromolecular assemblies.
 
-### 4. UI Control & State Management
+### UI Control & State Management
 - **One-Tap Switching**: Handled via the model switcher button (`btnToggleModel`) located in the bottom-left floating toolbar.
 - **Active Label Indicator**: The button label updates in real-time to reflect the active mode:
   - `Ball & Stick` → `Space-Filling` → `Stick` → `Wireframe` → *(cycles back)*
 - **Zero-Latency Transition**: Handled via the `@Volatile var renderModel: RenderModel` enum in `ProteinRenderer`. No memory reallocations or CIF file reads are triggered during switches.
-
----
 
 ## Relevant Files in the Codebase
 
@@ -60,11 +61,9 @@ Users can cycle dynamically between representations with a single tap of an on-s
 | [`SphereMesh.kt`](file:///home/firstmate/GitHub/swifty-proteins/app/src/main/java/com/example/swiftyproteins/ui/viewer/gl/SphereMesh.kt) | Kotlin Source | Provides tessellated sphere vertex buffers reused across Ball & Stick, Space-Filling, and joint caps. |
 | [`CylinderMesh.kt`](file:///home/firstmate/GitHub/swifty-proteins/app/src/main/java/com/example/swiftyproteins/ui/viewer/gl/CylinderMesh.kt) | Kotlin Source | Provides cylinder vertex buffers dynamically scaled for normal vs thick stick representations. |
 
----
-
 ## Testing and Verification
 
-### 1. Manual Evaluation Scenarios
+### Manual Evaluation Scenarios
 
 #### Scenario A: Model Switching Cycle
 1. Open any ligand (e.g., `HEM` or `ATP`).
@@ -94,9 +93,3 @@ Users can cycle dynamically between representations with a single tap of an on-s
 1. Switch to **Space-Filling** mode.
 2. Tap on the outer boundary of an expanded oxygen or sulfur sphere.
 3. Verify that the raycaster accurately detects the touch based on the expanded Van der Waals radius and presents the tooltip card.
-
-### 2. Evaluation Checklist Alignment
-- [x] Implemented multiple molecular visualization models beyond Ball-and-Stick.
-- [x] User can switch between Space-Filling, Stick, and Wireframe via an accessible UI control.
-- [x] Model switching operates smoothly in-place without reloading or network requests.
-- [x] Each representation strictly follows chemical and molecular visualization conventions.

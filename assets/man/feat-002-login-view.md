@@ -1,10 +1,6 @@
 # Login View
 
-## Overview
-
 The **Login View** provides a secure authentication gateway protecting access to the molecular exploration database. It combines standard credential-based registration and login with hardware-backed Android **Biometric Authentication** (Fingerprint and Face Unlock). In accordance with the 42 subject specifications, the security architecture strictly forbids storing passwords in plaintext, implements zero-leakage cryptographic storage, and enforces whole-application session locking upon backgrounding.
-
----
 
 ## Authentication Architecture
 
@@ -28,17 +24,15 @@ flowchart TD
     ValidateHash -- No --> ErrorDialog[Show Error: Invalid Credentials]
 ```
 
----
-
 ## Feature Specifications
 
-### 1. Dual-Mode Interface (Registration & Login)
+### Dual-Mode Interface (Registration & Login)
 - **First Launch Detection**: When no user account has been registered, the UI automatically opens in **Registration Mode** (fields: Username, Password, Confirm Password).
 - **Subsequent Launches**: Opens in **Login Mode** (fields: Username, Password) with autofill of the last active username.
 - **Dynamic Mode Toggle**: Users can switch between Login and Register at any time with a single tap.
 - **Input Validation**: Enforces mandatory fields, minimum password length (>= 4 characters), and confirmation match before processing.
 
-### 2. Native Biometric Authentication
+### Native Biometric Authentication
 - Implemented with AndroidX `BiometricPrompt` and `BiometricManager`.
 - Supports `BIOMETRIC_STRONG` (Class 3 hardware sensors) and `BIOMETRIC_WEAK` (Class 2 sensors/Face Unlock).
 - **Auto-Prompt on Launch**: If an account exists and valid biometrics are enrolled, the biometric prompt appears automatically on launch for fast access.
@@ -47,7 +41,7 @@ flowchart TD
   - `BIOMETRIC_ERROR_NO_HARDWARE` / `HW_UNAVAILABLE`: Informs the user via alert dialog and falls back seamlessly to password login.
 - **Authentication Failure Handling**: When an unrecognized fingerprint is tapped, an informative alert dialog offers an immediate **Retry** button or password fallback without crashing or freezing.
 
-### 3. Security Requirements & Cryptographic Storage
+### Security Requirements & Cryptographic Storage
 
 #### Zero Plaintext Storage
 Passwords are never stored in plaintext in logs, preferences, memory caches, or disk databases.
@@ -71,12 +65,10 @@ User records are persisted in `EncryptedSharedPreferences` using:
 - Password digests are computed using `SHA-256(salt + password)`.
 - Stored record format: `"$saltHex:$hashHex"`.
 
-### 4. Background Auto-Lock & Session Invalidation
+### Background Auto-Lock & Session Invalidation
 - The application monitors process-wide lifecycle transitions using Android Jetpack's `ProcessLifecycleOwner`.
 - **Immediate Lock on Backgrounding**: Whenever the user navigates away (e.g. presses the **Home** button, switches apps via recent tasks, or locks the device), `AppLifecycleObserver.onStop()` sets `SwiftyProteinsApp.isSessionLocked = true`.
 - **Enforced Re-Authentication**: Upon returning to the app, the active view detects the session lock state in `onResume()`, immediately terminates the current session, and routes the user back to `LoginActivity` with `FLAG_ACTIVITY_NEW_TASK or FLAG_ACTIVITY_CLEAR_TOP`.
-
----
 
 ## Relevant Files in the Codebase
 
@@ -89,11 +81,9 @@ User records are persisted in `EncryptedSharedPreferences` using:
 | [`ProteinListActivity.kt`](file:///home/firstmate/GitHub/swifty-proteins/app/src/main/java/com/example/swiftyproteins/ui/protein/ProteinListActivity.kt) | Kotlin Source | Checks `SwiftyProteinsApp.isSessionLocked` in `onResume()` and redirects to `LoginActivity` when locked. |
 | [`activity_login.xml`](file:///home/firstmate/GitHub/swifty-proteins/app/src/main/res/layout/activity_login.xml) | XML Layout | Responsive layout containing username/password input fields, biometric trigger button, and mode toggle. |
 
----
-
 ## Testing and Verification
 
-### 1. Manual Evaluation Scenarios
+### Manual Evaluation Scenarios
 
 #### Scenario A: First Launch & Account Creation
 1. Wipe application state with `make clear-data`.
@@ -125,7 +115,7 @@ User records are persisted in `EncryptedSharedPreferences` using:
 3. Re-open Swifty Proteins from the App Switcher.
 4. Verify that the user is **instantly returned to the Login view** requiring re-authentication.
 
-### 2. ADB / Makefile Commands
+### ADB / Makefile Commands
 
 ```bash
 # Simulate successful fingerprint on emulator (finger ID 1)
@@ -140,11 +130,3 @@ make clear-data
 # Stream authentication and security logs
 make logs
 ```
-
-### 3. Evaluation Checklist Alignment
-- [x] Username and password creation and login work reliably.
-- [x] Biometric authentication operates via standard Android BiometricPrompt.
-- [x] Failed biometric attempts present a clear error dialog with retry/fallback options.
-- [x] Devices without enrolled biometrics or hardware fail gracefully to password login.
-- [x] Passwords are encrypted/hashed with salt using Android KeyStore and AES-256 / SHA-256 (zero plaintext).
-- [x] App immediately locks session and requests re-authentication when backgrounded.

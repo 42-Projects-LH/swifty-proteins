@@ -83,8 +83,6 @@ make start-usb
 | `make test` | Execute local unit tests |
 | `make clean` / `make fclean` | Clean build cache / full reset including uninstall |
 
----
-
 ## Technical Stack
 
 - **Core & Runtime**:
@@ -111,8 +109,6 @@ make start-usb
   - **Architecture**: Android Jetpack, ViewBinding, Material Components
   - **Layouts**: Responsive `ConstraintLayout` adapting across screen sizes and orientations
   - **Sharing**: Scoped storage compliant `MediaStore` API + `FileProvider` (`Intent.ACTION_SEND`)
-
----
 
 ## System architecture
 
@@ -150,8 +146,6 @@ flowchart TD
     end
 ```
 
----
-
 ## Features
 
 Detailed documentation for each feature, including implementation architecture, codebase references, and step-by-step testing guides, is located in [`assets/man/`](assets/man/) (indexed in [`assets/README.md`](assets/README.md)).
@@ -186,8 +180,6 @@ Detailed documentation for each feature, including implementation architecture, 
 
 * [📂 **Extended Sharing and Export**](assets/man/bonus-005-extended-sharing-and-export.md)  
   Custom formatted share messages with Hill formula and atom/bond counts; Scoped Storage `MediaStore` photo album export (`Pictures/SwiftyProteins`); Android `FileProvider` system share sheet integration; persistent favorites bookmarking system.
-
----
 
 ## Resources
 

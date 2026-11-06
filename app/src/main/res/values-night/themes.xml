@@ -1,0 +1,18 @@
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <!-- Base application theme. -->
+    <style name="Base.Theme.SwiftyProteins" parent="Theme.Material3.DayNight.NoActionBar">
+        <item name="android:windowBackground">@color/surface_dark</item>
+        <item name="colorSurface">@color/card_dark</item>
+        <item name="colorOnSurface">@color/on_surface_dark</item>
+        <item name="colorPrimary">@color/cyan_accent</item>
+        <item name="colorSecondary">@color/pink_accent</item>
+    </style>
+
+    <!-- Dedicated Splash Theme in Night Mode -->
+    <style name="Theme.SwiftyProteins.Splash" parent="Theme.Material3.DayNight.NoActionBar">
+        <item name="android:windowIsTranslucent">true</item>
+        <item name="android:windowBackground">@android:color/transparent</item>
+        <item name="android:statusBarColor">#01EFFE</item>
+        <item name="android:navigationBarColor">#FE2F63</item>
+    </style>
+</resources>

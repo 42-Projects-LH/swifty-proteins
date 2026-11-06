@@ -1,0 +1,244 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#10141D">
+
+    <!-- OpenGL 3D Molecular Canvas -->
+    <com.example.swiftyproteins.ui.viewer.gl.ProteinSurfaceView
+        android:id="@+id/glSurfaceView"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <!-- Atom label overlay (Canvas drawn on top of GL) -->
+    <com.example.swiftyproteins.ui.viewer.AtomLabelOverlay
+        android:id="@+id/atomLabelOverlay"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:background="@android:color/transparent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <!-- Top App Bar with Navigation, Ligand Info and Share Action -->
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/layoutTopBar"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:background="#CC161B26"
+        android:paddingHorizontal="16dp"
+        android:paddingTop="36dp"
+        android:paddingBottom="12dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <ImageButton
+            android:id="@+id/btnBack"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:contentDescription="Back"
+            android:src="@drawable/ic_arrow_back"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="12dp"
+            android:layout_marginEnd="12dp"
+            android:orientation="vertical"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/btnShare"
+            app:layout_constraintStart_toEndOf="@id/btnBack"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <TextView
+                android:id="@+id/tvLigandName"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="#FFFFFF"
+                android:textSize="20sp"
+                android:textStyle="bold"
+                tools:text="ATP" />
+
+            <TextView
+                android:id="@+id/tvMoleculeStats"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="#88A0C0"
+                android:textSize="12sp"
+                tools:text="43 Atoms • 44 Bonds" />
+        </LinearLayout>
+
+        <ImageButton
+            android:id="@+id/btnShare"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:contentDescription="Share Model"
+            android:src="@drawable/ic_share"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <!-- Floating Atom Information Tooltip Card (Appears on Atom Tap) -->
+    <com.google.android.material.card.MaterialCardView
+        android:id="@+id/cardAtomInfo"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="20dp"
+        android:layout_marginBottom="16dp"
+        android:visibility="gone"
+        app:cardBackgroundColor="#E6181D29"
+        app:cardCornerRadius="16dp"
+        app:cardElevation="8dp"
+        app:strokeColor="#3301EFFE"
+        app:strokeWidth="1.5dp"
+        app:layout_constraintBottom_toTopOf="@id/layoutBottomControls"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        tools:visibility="visible">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="16dp">
+
+            <!-- CPK Color Badge -->
+            <View
+                android:id="@+id/viewAtomColor"
+                android:layout_width="28dp"
+                android:layout_height="28dp"
+                android:background="@drawable/bg_circle"
+                app:layout_constraintBottom_toBottomOf="@id/tvAtomTitle"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="@id/tvAtomTitle" />
+
+            <TextView
+                android:id="@+id/tvAtomTitle"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="12dp"
+                android:layout_marginEnd="8dp"
+                android:textColor="#FFFFFF"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                app:layout_constraintEnd_toStartOf="@id/btnCloseTooltip"
+                app:layout_constraintStart_toEndOf="@id/viewAtomColor"
+                app:layout_constraintTop_toTopOf="parent"
+                tools:text="Carbon (C)" />
+
+            <ImageButton
+                android:id="@+id/btnCloseTooltip"
+                android:layout_width="32dp"
+                android:layout_height="32dp"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:contentDescription="Close Tooltip"
+                android:src="@drawable/ic_close"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:id="@+id/tvAtomId"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
+                android:textColor="#01EFFE"
+                android:textSize="13sp"
+                android:textStyle="bold"
+                app:layout_constraintStart_toStartOf="@id/tvAtomTitle"
+                app:layout_constraintTop_toBottomOf="@id/tvAtomTitle"
+                tools:text="Atom ID: C12" />
+
+            <TextView
+                android:id="@+id/tvAtomCoords"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="6dp"
+                android:fontFamily="monospace"
+                android:textColor="#94A3B8"
+                android:textSize="12sp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="@id/viewAtomColor"
+                app:layout_constraintTop_toBottomOf="@id/tvAtomId"
+                tools:text="Coordinates: X: 1.234 | Y: -2.456 | Z: 0.789" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </com.google.android.material.card.MaterialCardView>
+
+    <!-- Bottom Control Bar (Camera Reset & Multi-Model Visualization Switcher) -->
+    <LinearLayout
+        android:id="@+id/layoutBottomControls"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="24dp"
+        android:background="#CC161B26"
+        android:elevation="6dp"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:paddingHorizontal="16dp"
+        android:paddingVertical="8dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent">
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnResetCamera"
+            style="@style/Widget.MaterialComponents.Button.TextButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Center"
+            android:textColor="#FFFFFF"
+            android:textSize="12sp"
+            app:icon="@drawable/ic_reset_camera"
+            app:iconTint="#FFFFFF" />
+
+        <View
+            android:layout_width="1dp"
+            android:layout_height="24dp"
+            android:layout_marginHorizontal="8dp"
+            android:background="#33FFFFFF" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnToggleLabels"
+            style="@style/Widget.MaterialComponents.Button.TextButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:alpha="0.45"
+            android:text="Labels"
+            android:textColor="#FFFFFF"
+            android:textSize="12sp" />
+
+        <View
+            android:layout_width="1dp"
+            android:layout_height="24dp"
+            android:layout_marginHorizontal="8dp"
+            android:background="#33FFFFFF" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnToggleModel"
+            style="@style/Widget.MaterialComponents.Button.TextButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Ball &amp; Stick"
+            android:textColor="#01EFFE"
+            android:textSize="12sp"
+            app:icon="@drawable/ic_layers"
+            app:iconTint="#01EFFE" />
+
+    </LinearLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

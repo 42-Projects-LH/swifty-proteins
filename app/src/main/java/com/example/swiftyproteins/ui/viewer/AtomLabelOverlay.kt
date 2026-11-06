@@ -23,10 +23,13 @@ class AtomLabelOverlay @JvmOverloads constructor(
 
     private val textPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
         color = Color.WHITE
-        textSize = 32f
+        textSize = 28f
         typeface = Typeface.create(Typeface.MONOSPACE, Typeface.BOLD)
         textAlign = Paint.Align.CENTER
-        setShadowLayer(3f, 1f, 1f, Color.BLACK)
+    }
+
+    private val bgPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
+        style = Paint.Style.FILL
     }
 
     private val scratch = FloatArray(4)
@@ -42,41 +45,50 @@ class AtomLabelOverlay @JvmOverloads constructor(
         val h = height.toFloat()
         if (w <= 0 || h <= 0) return
 
-        // Rebuild MVP from renderer state (same math as ProteinRenderer.onDrawFrame)
-        val proj = r.projectionMatrix
-        val view = r.viewMatrix
-        val model = r.modelMatrix
-
-        Matrix.multiplyMM(mv, 0, view, 0, model, 0)
-        Matrix.multiplyMM(mvp, 0, proj, 0, mv, 0)
+        Matrix.multiplyMM(mv, 0, r.viewMatrix, 0, r.modelMatrix, 0)
+        Matrix.multiplyMM(mvp, 0, r.projectionMatrix, 0, mv, 0)
 
         val cx = centerOffset[0]
         val cy = centerOffset[1]
         val cz = centerOffset[2]
 
+        val padding = 8f
+        val radius = 12f
+
         for (atom in atoms) {
+            // Skip hydrogens — too numerous, clutter the view
+            if (atom.symbol.equals("H", ignoreCase = true)) continue
+
             scratch[0] = atom.x - cx
             scratch[1] = atom.y - cy
             scratch[2] = atom.z - cz
             scratch[3] = 1f
 
             Matrix.multiplyMV(clip, 0, mvp, 0, scratch, 0)
-
             if (clip[3] <= 0f) continue
-            val ndcX = clip[0] / clip[3]
-            val ndcY = clip[1] / clip[3]
 
-            // Clip space to screen
-            val sx = (ndcX + 1f) / 2f * w
-            val sy = (1f - ndcY) / 2f * h
+            val sx = (clip[0] / clip[3] + 1f) / 2f * w
+            val sy = (1f - clip[1] / clip[3]) / 2f * h
 
-            // Only draw if on screen
-            if (sx < -20 || sx > w + 20 || sy < -20 || sy > h + 20) continue
+            if (sx < -40 || sx > w + 40 || sy < -40 || sy > h + 40) continue
 
-            canvas.drawText(atom.symbol, sx, sy - 20f, textPaint)
+            // Label floats above the atom sphere
+            val labelY = sy - 36f
+
+            val textW = textPaint.measureText(atom.symbol)
+            val left   = sx - textW / 2f - padding
+            val top    = labelY - textPaint.textSize - padding / 2f
+            val right  = sx + textW / 2f + padding
+            val bottom = labelY + padding / 2f
+
+            // Background pill using CPK color with opacity
+            val argb = atom.colorHex
+            bgPaint.color = (0xCC shl 24) or (argb and 0x00FFFFFF)
+            canvas.drawRoundRect(left, top, right, bottom, radius, radius, bgPaint)
+
+            canvas.drawText(atom.symbol, sx, labelY, textPaint)
         }
 
-        // Request next frame so labels follow rotation
         invalidate()
     }
 }

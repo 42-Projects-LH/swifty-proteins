@@ -7,12 +7,13 @@ _This project has been created as part of the 42 curriculum by nadoho._
 **Swifty Proteins** is an Android application that lets users explore the 3D atomic structure of chemical ligands sourced from the [RCSB Protein Data Bank](https://www.rcsb.org/). After a secure authentication step, users browse a curated list of ligand identifiers, fetch their CIF data on demand, and visualize the resulting molecule through an interactive OpenGL ES 2.0 renderer. The viewer supports four render modes, real-time atom selection with element highlighting, an atom-label overlay, and a one-tap share flow that captures the current 3D frame.
 
 ```mermaid
+%%{init: {'theme': 'dark'}}%%
 graph LR
-    classDef blueNode  fill:#e8f0fe,stroke:#8ab4f8,stroke-width:1px,color:#000
-    classDef greenNode fill:#e6f4ea,stroke:#81c995,stroke-width:1px,color:#000
-    classDef peachNode fill:#fce8e6,stroke:#f28b82,stroke-width:1px,color:#000
-    classDef pinkNode  fill:#f3e8fd,stroke:#c58af9,stroke-width:1px,color:#000
-    classDef purpleNode fill:#e8eaf6,stroke:#9fa8da,stroke-width:1px,color:#000
+    classDef blueNode  fill:#1a2744,stroke:#8ab4f8,stroke-width:1px,color:#e8f0fe
+    classDef greenNode fill:#1a3028,stroke:#81c995,stroke-width:1px,color:#e6f4ea
+    classDef peachNode fill:#3a1f1d,stroke:#f28b82,stroke-width:1px,color:#fce8e6
+    classDef pinkNode  fill:#2d1f3d,stroke:#c58af9,stroke-width:1px,color:#f3e8fd
+    classDef purpleNode fill:#1f2240,stroke:#9fa8da,stroke-width:1px,color:#e8eaf6
 
     style Auth    fill:none,stroke:#9aa0a6,stroke-width:1px,stroke-dasharray:5 5
     style Render  fill:none,stroke:#9aa0a6,stroke-width:1px,stroke-dasharray:5 5
@@ -73,6 +74,7 @@ adb install app/build/outputs/apk/debug/app-debug.apk
 ## System architecture
 
 ```mermaid
+%%{init: {'theme': 'dark'}}%%
 flowchart TD
     subgraph Security ["Security Layer"]
         A([User]) --> B(Login / Register)

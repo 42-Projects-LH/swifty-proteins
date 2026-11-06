@@ -1,7 +1,5 @@
 ![img](assets/imgs/swifty-proteins.png)
 
-_This project has been created as part of the 42 curriculum by nadoho._
-
 ## Description
 
 **Swifty Proteins** is an Android application that lets users explore the 3D atomic structure of chemical ligands sourced from the [RCSB Protein Data Bank](https://www.rcsb.org/). After a secure authentication step, users browse a curated list of ligand identifiers, fetch their CIF data on demand, and visualize the resulting molecule through an interactive OpenGL ES 2.0 renderer. The viewer supports four render modes, real-time atom selection with element highlighting, an atom-label overlay, and a one-tap share flow that captures the current 3D frame.
@@ -43,33 +41,78 @@ graph LR
 
 ## Instructions
 
-> [!NOTE]
-> For environment setup (JDK, Android SDK, udev rules, environment variables), refer to the [dedicated documentation](assets/man/prj-setup.md).
+### Prerequisites
+- **Java Development Kit**: JDK 17 or JDK 21
+- **Android SDK**: Android API 37 platform, Build-Tools, and Platform-Tools (`adb`)
+- **Device / Emulator**: Android 8.0+ (API 26+) physical device with USB debugging enabled, or an Android Virtual Device (AVD) with Google Play Services
 
-### Build
-
+### Build & Compilation
 ```bash
-git clone <repo-url> swifty-proteins
-cd swifty-proteins
+# Build debug APK via Makefile
+make build
+
+# Or directly with Gradle wrapper
 ./gradlew assembleDebug
 ```
 
-### Install
-
+### Installation & Launch
 ```bash
-# Physical device or running emulator
-adb install app/build/outputs/apk/debug/app-debug.apk
+# Build, install, and launch on active ADB target
+make start
+
+# Target an Android emulator specifically
+make start-emu
+
+# Target a USB-connected physical phone
+make start-usb
 ```
 
-### First launch
+### Quick Commands Reference
+| Command | Action |
+|---|---|
+| `make all` / `make build` | Compile the debug APK (`app/build/outputs/apk/debug/app-debug.apk`) |
+| `make start` | Build, install, and launch cold start on default active device |
+| `make start-emu` | Build, install, and launch cold start on running Android emulator |
+| `make start-usb` | Build, install, and launch cold start on USB physical phone |
+| `make bio-success` | Simulate a valid fingerprint touch on emulator (`finger touch 1`) |
+| `make bio-fail` | Simulate an unrecognized fingerprint touch on emulator (`finger touch 2`) |
+| `make clear-data` | Wipe app credentials and KeyStore data for defense testing |
+| `make pull-photos` | Pull exported 3D protein snapshots from device to local directory |
+| `make screenshot` | Capture the current device screen |
+| `make logs` | Stream filtered real-time logcat output for `com.example.swiftyproteins` |
+| `make test` | Execute local unit tests |
+| `make clean` / `make fclean` | Clean build cache / full reset including uninstall |
 
-1. **Register** a username and password (minimum 4 characters).
-2. **Log in** with credentials or use biometrics if enrolled on the device.
-3. Browse or **search** the ligand list; tap ★ to add a favorite.
-4. Tap a ligand name to fetch and render its 3D structure.
-5. In the viewer — rotate with one finger, pinch to zoom, two-finger pan.
-6. **Tap an atom** to inspect its element, ID, and XYZ coordinates.
-7. Use the toolbar to toggle labels, switch render mode, reset the camera, or share a snapshot.
+---
+
+## Technical Stack
+
+- **Core & Runtime**:
+  - **Language**: Kotlin 1.9+
+  - **Platform**: Android SDK (Compile & Target: `API 37`, Minimum: `API 26` Android 8.0)
+  - **Concurrency**: Kotlin Coroutines (`Dispatchers.IO`, `Dispatchers.Default`, `Dispatchers.Main`)
+- **Graphics & 3D Visualization**:
+  - **Engine**: Custom Native OpenGL ES 2.0 Pipeline
+  - **Shaders**: GLSL vertex and fragment shaders implementing the **Phong reflection model** (ambient, diffuse, specular highlights)
+  - **Geometry**: Direct native FloatBuffers for tessellated UV spheres (`SphereMesh`) and orientation-transformed cylinders (`CylinderMesh`)
+  - **Interaction**: 3D Raycasting picker (`RaycastPicker`) with inverted Model-View-Projection NDC unprojection
+- **Security & Storage**:
+  - **Biometrics**: AndroidX `BiometricPrompt` & `BiometricManager` (Class 3 / Class 2 authenticators)
+  - **Hardware KeyStore**: `MasterKey` AES256_GCM hardware-backed key scheme
+  - **Encrypted Preferences**: `EncryptedSharedPreferences` (`AES256_SIV` key encryption, `AES256_GCM` value encryption)
+  - **Password Hashing**: `SecureRandom` 16-byte cryptographically secure pseudo-random salt + `SHA-256` hashing
+  - **Lifecycle Security**: `ProcessLifecycleOwner` monitoring for automatic background session locking
+- **Networking & Data Pipeline**:
+  - **Network Client**: Square Retrofit 2.9.0 & OkHttp 3 with logging interceptors and 15s timeout
+  - **Remote Source**: [RCSB Protein Data Bank](https://www.rcsb.org/) REST API (`https://files.rcsb.org/ligands/view/{ligand}.cif`)
+  - **CIF Parser**: Custom tokenizer parsing `_chem_comp_atom` coordinates and `_chem_comp_bond` connections
+  - **Local Cache**: Persistent on-disk CIF caching (`filesDir/cif_cache/`)
+- **User Interface & Architecture**:
+  - **Architecture**: Android Jetpack, ViewBinding, Material Components
+  - **Layouts**: Responsive `ConstraintLayout` adapting across screen sizes and orientations
+  - **Sharing**: Scoped storage compliant `MediaStore` API + `FileProvider` (`Intent.ACTION_SEND`)
+
+---
 
 ## System architecture
 
@@ -107,40 +150,44 @@ flowchart TD
     end
 ```
 
-## Authentication strategy
+---
 
-Access to the app is gated behind a credential system backed by `EncryptedSharedPreferences` (AndroidX Security Crypto). On first launch the user creates a username and password (≥ 4 characters); subsequent launches offer biometric authentication (fingerprint or face) auto-prompted when the hardware is ready. The session is locked automatically whenever the app is sent to the background, redirecting back to the login screen on next resume.
+## Features
 
-## Data pipeline
+Detailed documentation for each feature, including implementation architecture, codebase references, and step-by-step testing guides, is located in [`assets/man/`](assets/man/) (indexed in [`assets/README.md`](assets/README.md)).
 
-Ligand identifiers are loaded at startup from a bundled `ligands.txt` asset. When a user selects a ligand, the app first checks a local CIF file cache; on a miss it fetches the record from the RCSB PDB REST API via Retrofit, writes it to the cache, then hands the raw CIF text to the parser. The CIF parser walks the file line-by-line, identifies the `_chem_comp_atom` and `_chem_comp_bond` loop blocks, extracts column headers dynamically, and builds a `Molecule` object from the parsed atom coordinates and bond connectivity.
+### Mandatory
 
-## Rendering approach
+* [📂 **Application Icon and Launch Screen**](assets/man/feat-001-app-icon-and-launch-screen.md)  
+  Adaptive multi-density launcher icon across all standard screen densities; dedicated splash screen with branding logo enforced to display for at least 1.0 second (`1100 ms`) with smooth fade transitions; responsive autolayout.
 
-The 3D viewer is built on a custom OpenGL ES 2.0 renderer. Atoms are drawn as UV spheres (20 stacks × 20 slices) using a Phong shading model (ambient + diffuse + specular with a Blinn-Halfway vector). Bonds are rendered as cylinders (16 segments) aligned along each atom pair's direction vector via an axis-angle rotation from the default Z-axis. Four render modes are available:
+* [📂 **Login View**](assets/man/feat-002-login-view.md)  
+  Credential registration and login; native AndroidX `BiometricPrompt` with graceful fallback and informative error dialogs; hardware-backed encryption via KeyStore `MasterKey` (AES-256) and salted SHA-256 hashing; process-wide background auto-lock.
 
-| Mode | Description |
-|---|---|
-| **Ball & Stick** | CPK-colored spheres + gray cylindrical bonds |
-| **Space-Filling** | Spheres scaled to van der Waals radii |
-| **Stick** | Wider bond cylinders with small atom end-caps |
-| **Wireframe** | Flat cyan edge lines via a lightweight wire shader |
+* [📂 **Protein List View**](assets/man/feat-003-protein-list-view.md)  
+  Candidate ligand loading from bundled `ligands.txt` into an optimized `RecyclerView`; real-time search filtering; asynchronous remote CIF retrieval from RCSB PDB; centered modal loading spinner; comprehensive error alert dialogs.
 
-Atom selection uses a 3D ray cast from the touch point through the view frustum, testing against each atom's bounding sphere. A selected atom receives a translucent cyan halo; every other atom sharing the same element symbol gets a gold halo.
+* [📂 **Protein View**](assets/man/feat-004-protein-view.md)  
+  Custom OpenGL ES 2.0 3D renderer; Ball-and-Stick molecular geometry; standard CPK chemical coloring; touch gestures (1-finger orbit rotation, 2-finger pinch zoom, 2-finger pan); 3D raycasting atom selection with tooltip; one-tap PNG capture saving to photo album and opening system share sheet.
 
-## Performance & caching
+### Bonus
 
-Downloaded CIF records are written to the app's internal storage, keyed by ligand ID. Subsequent visits resolve in milliseconds without touching the network. The molecule centroid and bounding radius are computed once on load to auto-fit the camera; the initial distance is set to `boundingRadius × 3.2`. Wireframe geometry is pre-built into a static `FloatBuffer` on molecule load to avoid per-frame allocation.
+* [📂 **Multiple Visualization Models**](assets/man/bonus-001-multiple-visualization-models.md)  
+  Dynamic in-place switching between Ball & Stick, Space-Filling (empirical Van der Waals radii), Stick (Licorice), and Wireframe line primitives without reloading or re-fetching data; adaptive raycast picking.
 
-## Bonuses
+* [📂 **Advanced User Interface**](assets/man/bonus-002-advanced-user-interface.md)  
+  Custom elevated card list cells with letter avatars and cache pills; activity fade transitions; OLED-optimized dark mode color palette; contextual toolbars for camera reset, model toggle, and label overlay.
 
-📂 [Atom label overlay](assets/man/atom_label_overlay.md)
+* [📂 **Enhanced Molecular Interactions**](assets/man/bonus-003-enhanced-molecular-interactions.md)  
+  Dual-layer atom highlighting (cyan selection halo and gold element-wide co-highlighting); floating 3D-projected CPK atom labels overlay; automated Hill notation empirical formula computation (`Molecule.molecularFormula`); camera reset.
 
-📂 [Element highlighting](assets/man/element_highlighting.md)
+* [📂 **Performance and Caching**](assets/man/bonus-004-performance-and-caching.md)  
+  Persistent on-disk CIF caching enabling instant offline access; lazy loading; multi-threaded coroutine parsing (`Dispatchers.IO` and `Dispatchers.Default`); zero-allocation render loop using native ByteBuffers; continuous 60+ FPS VSync synchronization.
 
-📂 [Share & save to photo album](assets/man/share_save.md)
+* [📂 **Extended Sharing and Export**](assets/man/bonus-005-extended-sharing-and-export.md)  
+  Custom formatted share messages with Hill formula and atom/bond counts; Scoped Storage `MediaStore` photo album export (`Pictures/SwiftyProteins`); Android `FileProvider` system share sheet integration; persistent favorites bookmarking system.
 
-📂 [CIF incremental cache](assets/man/cif_cache.md)
+---
 
 ## Resources
 
@@ -157,7 +204,13 @@ Downloaded CIF records are written to the app's internal storage, keyed by ligan
 
 ### AI Usage
 
+Artificial Intelligence assistance tools were utilized throughout the project lifecycle in the following capacities:
+
 - Project research and architecture planning
 - Debugging the OpenGL ES cylinder transform and raycasting logic
 - Code quality audit
 - Writing documentation and this README
+
+> [!NOTE]
+>
+> All code, architecture designs, documentation, and configurations generated or refined with AI assistance were comprehensively audited, reviewed, verified, and tested by human team members to guarantee correctness, maintainability, and full adherence to project guidelines and academic integrity standards.

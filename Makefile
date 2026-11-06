@@ -42,12 +42,12 @@ DATE     := date
 
 RESET    := $(shell printf '\033[0m')
 BLACK    := $(shell printf '\033[1;90m')
-RED      := $(shell printf '\033[38;2;255;95;95m')
-GREEN    := $(shell printf '\033[38;2;80;230;120m')
-YELLOW   := $(shell printf '\033[38;2;255;215;0m')
-BLUE     := $(shell printf '\033[38;2;90;160;255m')
-MAGENTA  := $(shell printf '\033[38;2;215;135;255m')
-CYAN     := $(shell printf '\033[38;2;0;225;255m')
+RED      := $(shell printf '\033[1;38;2;255;95;95m')
+GREEN    := $(shell printf '\033[1;38;2;80;230;120m')
+YELLOW   := $(shell printf '\033[1;38;2;255;215;0m')
+BLUE     := $(shell printf '\033[1;38;2;90;160;255m')
+MAGENTA  := $(shell printf '\033[1;38;2;215;135;255m')
+CYAN     := $(shell printf '\033[1;38;2;0;225;255m')
 WHITE    := $(shell printf '\033[1;97m')
 
 # ============================================================

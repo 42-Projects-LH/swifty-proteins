@@ -1,104 +1,119 @@
-# Swifty Proteins - Features & Specifications Index
+# Swifty Proteins — Documentation Index
 
-This directory contains the complete technical and functional documentation for the **Swifty Proteins** application, indexed according to the official **42 Evaluation Scale** and project subject guidelines.
+This directory contains technical and functional documentation for **Swifty Proteins**, structured according to the official 42 evaluation scale and subject specifications.
 
----
-
-## 1. Project Setup & Environment Prerequisites
-
-Before compiling or evaluating the project, verify that the environment meets the development requirements:
-
-* [**`prj-setup.md`**](man/prj-setup.md) — **Project Setup & Environment Prerequisites**
-  * **Java Environment**: JDK 21 (or JDK 17). Note that Gradle 9.6.0 daemon requires Java 17–25 (Java 27 is unsupported).
-  * **Android Studio & SDK**: Android Studio with Android SDK API 37, Build-Tools, Platform-Tools, and Emulator.
-  * **Linux Development Tools**: `android-tools` (`adb`, `fastboot`) and `android-udev` device rules.
-  * **User Permissions**: Membership in `kvm` (for hardware-accelerated emulator virtualization) and `adbusers` (for USB physical device debugging).
-  * **Hyprland / Wayland Notes**: `QT_QPA_PLATFORM=xcb` fallback instructions for emulator stability.
+Each manual in [`assets/man/`](man/) details the architecture, feature specifications, codebase references, and step-by-step testing and verification procedures.
 
 ---
 
-## 2. Mandatory Features
+## 1. Mandatory Features
 
-The following features constitute the mandatory part of the evaluation. All items in this section must be fully functional and verifiable on both emulator and physical devices.
+The mandatory part of the evaluation comprises four core functional areas. All features in this section are fully implemented, verified, and testable on both Android emulators and physical devices.
 
-### Section I: Application Setup & Branding
-* [**`feat-001-icon-and-launchscreen.md`**](man/feat-001-icon-and-launchscreen.md) — **Application Icon & Launch Screen**
-  * Custom home screen adaptive launcher icon across all screen densities.
-  * Dedicated launch (splash) screen that remains visible for **at least 1 second**.
-  * Status: **Completed**
-
-### Section II: First View — Authentication & Security
-* [**`feat-002-biometric-and-password-authentication.md`**](man/feat-002-biometric-and-password-authentication.md) — **Biometric & Password Authentication**
-  * Account creation and login with username and password.
-  * Native biometric verification via Android `BiometricPrompt` (fingerprint / Face Unlock).
-  * Informative alert popup dialog when biometric authentication fails or is cancelled.
-  * Username/password fallback when biometric hardware is unavailable or not enrolled.
-  * Status: **Completed**
-
-* [**`feat-003-password-security-and-storage.md`**](man/feat-003-password-security-and-storage.md) — **Password Security & Encrypted Storage**
-  * Zero plaintext password storage.
-  * Hardware-backed encryption via Android KeyStore `MasterKey` (AES256_GCM).
-  * Cryptographic password hashing using SHA-256 before storage in `EncryptedSharedPreferences`.
-  * Status: **Completed**
-
-* [**`feat-004-session-security-and-background-lock.md`**](man/feat-004-session-security-and-background-lock.md) — **Session Security & Background Auto-Lock**
-  * Whole-application lifecycle tracking via `ProcessLifecycleOwner`.
-  * Automatic session locking when the user navigates away or presses the device Home button.
-  * Mandatory re-authentication prompt upon returning to the application.
-  * Status: **Completed**
-
-### Section III: Second View — Ligand List View
-* [**`feat-005-ligand-list-and-search.md`**](man/feat-005-ligand-list-and-search.md) — **Ligand Catalog List & Search Filter**
-  * Complete loading of all candidate ligands from bundled `ligands.txt` into a `RecyclerView`.
-  * Real-time search and query filtering via `SearchView`.
-  * Accurate selection handling for filtered and unfiltered items.
-  * Status: **Completed**
-
-* [**`feat-006-ligand-network-fetching-and-error-handling.md`**](man/feat-006-ligand-network-fetching-and-error-handling.md) — **Ligand Network Fetching & Error Handling**
-  * Remote structure fetching from RCSB PDB in `.cif` format (`https://files.rcsb.org/ligands/view/{ligand}.cif`).
-  * Visible spinning wheel loading animation (`ProgressBar`) during asynchronous download.
-  * Warning alert popup describing the exact failure cause (offline, timeout, HTTP 404, parse error).
-  * Status: **Completed**
-
-### Section IV: Third View — 3D Molecular Visualization
-* [**`feat-007-3d-molecular-visualization.md`**](man/feat-007-3d-molecular-visualization.md) — **3D Molecular Visualization (Ball-and-Stick Model)**
-  * Native in-app 3D rendering pipeline (spheres for atoms, cylinders for chemical bonds).
-  * Normalized bounding box and automatic camera centering.
-  * Standard CPK chemical coloring (C: Gray, H: White, O: Red, N: Blue, S: Yellow, P: Orange, Halogens: Green).
-  * Status: **Completed**
-
-* [**`feat-008-gesture-controls-and-camera.md`**](man/feat-008-gesture-controls-and-camera.md) — **Gesture Controls & Camera Manipulation**
-  * 1-finger swipe/drag smooth 3D rotation (trackball / orbit controls).
-  * 2-finger pinch gesture for responsive zoom in and out.
-  * Fluid, lag-free performance targeting consistent 60 FPS.
-  * Status: **Completed**
-
-* [**`feat-009-atom-interaction-and-tooltip.md`**](man/feat-009-atom-interaction-and-tooltip.md) — **Atom Interaction & Tooltip Display**
-  * 3D raycasting and object picking when tapping an atom.
-  * Informational tooltip card displaying atom symbol, name, and coordinate data.
-  * Automatic tooltip dismissal when tapping anywhere else on the screen.
-  * Status: **Completed**
-
-* [**`feat-010-model-sharing-and-gallery-export.md`**](man/feat-010-model-sharing-and-gallery-export.md) — **Model Sharing & Gallery Export**
-  * In-view Share button capturing the active 3D framebuffer.
-  * System share sheet integration via Android `Intent.ACTION_SEND` and `FileProvider`.
-  * Direct image export to the device's photo album/gallery via Android `MediaStore` API.
-  * Status: **Completed**
+### [📂 feat-001: Application Icon and Launch Screen](man/feat-001-app-icon-and-launch-screen.md)
+* **Application Launcher Icon**: Custom adaptive molecular launcher icon across all density buckets (`mdpi`, `hdpi`, `xhdpi`, `xxhdpi`, `xxxhdpi`, and vector `anydpi-v26`).
+* **Launch Screen (Splash)**: Dedicated `SplashActivity` with centered branding logo and dark gradient, enforced to stay visible for **at least 1.0 second** (timed at `1100 ms`) with smooth fade transition to login.
+* **Autolayout**: Responsive `ConstraintLayout` architecture supporting all screen aspect ratios and portrait/landscape orientations.
+* **Key Files**: [`SplashActivity.kt`](../app/src/main/java/com/example/swiftyproteins/ui/splash/SplashActivity.kt), [`activity_splash.xml`](../app/src/main/res/layout/activity_splash.xml), [`themes.xml`](../app/src/main/res/values/themes.xml).
+* **Testing**: Cold start timing verification via `make run` / `adb logcat`, screen rotation tests.
 
 ---
 
-## 3. Bonus Features
+### [📂 feat-002: Login View](man/feat-002-login-view.md)
+* **Dual-Mode Authentication**: Intuitive switching between User Registration (with password confirmation) and Credential Login.
+* **Biometric Authentication**: Native AndroidX `BiometricPrompt` supporting Fingerprint and Face Unlock, auto-prompting enrolled users with graceful error alerts and password fallback.
+* **Hardware-Backed Security**: Zero plaintext password storage; Android KeyStore `MasterKey` (`AES256_GCM`), `EncryptedSharedPreferences` (`AES256_SIV` / `AES256_GCM`), and salted `SHA-256` hashing (`SecureRandom` 16-byte salt).
+* **Background Auto-Lock**: `ProcessLifecycleOwner` lifecycle tracking locks active sessions upon backgrounding (Home button, app switcher, lock screen), requiring re-authentication on return.
+* **Key Files**: [`LoginActivity.kt`](../app/src/main/java/com/example/swiftyproteins/ui/auth/LoginActivity.kt), [`SecureStorage.kt`](../app/src/main/java/com/example/swiftyproteins/util/SecureStorage.kt), [`SwiftyProteinsApp.kt`](../app/src/main/java/com/example/swiftyproteins/SwiftyProteinsApp.kt), [`AppLifecycleObserver.kt`](../app/src/main/java/com/example/swiftyproteins/util/AppLifecycleObserver.kt).
+* **Testing**: `make bio-success`, `make bio-fail`, `make clear-data`, backgrounding auto-lock verification.
 
-Evaluated only after all mandatory features have been verified and scored perfectly.
+---
 
-* [**`bonus-001-multiple-visualization-models.md`**](man/bonus-001-multiple-visualization-models.md) — **Multiple Visualization Models**
-  * Dynamic switching between Ball-and-Stick, Space-Filling (van der Waals radius), Wireframe, and Stick representations.
-  * Status: **Completed**
-* [**`bonus-002-advanced-user-interface.md`**](man/bonus-002-advanced-user-interface.md) — **Advanced User Interface**
-  * Custom list cells, smooth transition animations, and dark mode support.
-* [**`bonus-003-enhanced-molecular-interactions.md`**](man/bonus-003-enhanced-molecular-interactions.md) — **Enhanced Molecular Interactions**
-  * Atom highlight rings, bond length measurements, and chemical property cards.
-* [**`bonus-004-performance-and-caching.md`**](man/bonus-004-performance-and-caching.md) — **Performance & Local Caching**
-  * Disk caching of downloaded CIF files, lazy loading, and memory optimization for smooth 60 FPS.
-* [**`bonus-005-extended-sharing-and-export.md`**](man/bonus-005-extended-sharing-and-export.md) — **Extended Sharing & Export**
-  * Custom formatted share messages, multi-format export (PNG, CIF export).
+### [📂 feat-003: Protein List View](man/feat-003-protein-list-view.md)
+* **Ligand Catalog**: Complete loading of all candidate chemical ligands from bundled `ligands.txt` into an optimized `RecyclerView`.
+* **Real-Time Search**: Integrated `SearchView` offering instant keystroke filtering, safe index mapping, and dedicated favorites filtering.
+* **Asynchronous Fetching**: Remote retrieval from the RCSB Protein Data Bank API (`GET https://files.rcsb.org/ligands/view/{ligand}.cif`) via Retrofit 2 and OkHttp inside background coroutines (`Dispatchers.IO`).
+* **Spinning Loading Wheel**: Modal progress overlay with a centered circular `ProgressBar` and dynamic status indicators during downloads.
+* **Resilient Error Handling**: Descriptive `AlertDialog` popups for offline state (`UnknownHostException`), network timeouts (`SocketTimeoutException`), missing ligands (HTTP 404), or empty coordinate data.
+* **Key Files**: [`ProteinListActivity.kt`](../app/src/main/java/com/example/swiftyproteins/ui/protein/ProteinListActivity.kt), [`ProteinAdapter.kt`](../app/src/main/java/com/example/swiftyproteins/ui/protein/ProteinAdapter.kt), [`NetworkClient.kt`](../app/src/main/java/com/example/swiftyproteins/data/network/NetworkClient.kt), [`CifParser.kt`](../app/src/main/java/com/example/swiftyproteins/data/parser/CifParser.kt).
+* **Testing**: Substring search filtering, offline mode simulation, network error handling dialogs.
+
+---
+
+### [📂 feat-004: Protein View](man/feat-004-protein-view.md)
+* **Native 3D OpenGL ES 2.0 Engine**: Custom rendering pipeline using Phong reflection model shaders, directional lighting, and depth testing.
+* **Ball-and-Stick Architecture**: Tessellated 3D UV spheres (`SphereMesh`) for atoms and aligned 3D cylinders (`CylinderMesh`) for chemical bonds.
+* **Standard CPK Coloring**: Complete chemical elemental color mapping (Carbon: Gray, Hydrogen: White, Oxygen: Red, Nitrogen: Blue, Sulfur: Yellow, Phosphorus: Orange, Halogens: Green).
+* **Gesture Controls**: 1-finger orbit rotation (clamped pitch to prevent inversion), 2-finger pinch-to-zoom, and 2-finger camera panning.
+* **Raycasting & Atom Information**: High-precision 3D screen-to-world raycasting (`RaycastPicker`) selecting atoms on tap, displaying an informational tooltip with element name, symbol, ID, and 3D coordinates.
+* **Export & Sharing**: In-app snapshot export capturing the active framebuffer via `glReadPixels`, writing directly to the device photo album (`Pictures/SwiftyProteins`) and opening the Android system share sheet with Hill chemical formula details.
+* **Key Files**: [`ProteinViewerActivity.kt`](../app/src/main/java/com/example/swiftyproteins/ui/viewer/ProteinViewerActivity.kt), [`ProteinRenderer.kt`](../app/src/main/java/com/example/swiftyproteins/ui/viewer/gl/ProteinRenderer.kt), [`ProteinSurfaceView.kt`](../app/src/main/java/com/example/swiftyproteins/ui/viewer/gl/ProteinSurfaceView.kt), [`RaycastPicker.kt`](../app/src/main/java/com/example/swiftyproteins/ui/viewer/gl/RaycastPicker.kt).
+* **Testing**: 3D gestures, atom selection & tooltip, gallery export, `make pull-photos`.
+
+---
+
+## 2. Bonus Features
+
+The bonus section extends the application with advanced biochemical visualization, performance optimizations, and enhanced interactions.
+
+### [📂 bonus-001: Multiple Visualization Models](man/bonus-001-multiple-visualization-models.md)
+* **Four Render Modes**:
+  1. **Ball & Stick**: Baseline representation with atomic spheres and cylindrical covalent bonds.
+  2. **Space-Filling (CPK / Calotte)**: Scaled by empirical Van der Waals radii displaying true steric volume.
+  3. **Stick (Licorice)**: Thick cylindrical bonds with small atom joint caps for clear bond topology.
+  4. **Wireframe**: Lightweight glowing line network (`GL_LINES`) with atomic node joints.
+* **In-Place UI Switching**: Floating toggle button cycles through models instantaneously without reloading or re-fetching data.
+* **Adaptive Raycasting**: Raycast hit detection automatically expands in Space-Filling mode to match Van der Waals boundaries.
+* **Key Files**: [`ProteinRenderer.kt`](../app/src/main/java/com/example/swiftyproteins/ui/viewer/gl/ProteinRenderer.kt), [`ProteinViewerActivity.kt`](../app/src/main/java/com/example/swiftyproteins/ui/viewer/ProteinViewerActivity.kt), [`Atom.kt`](../app/src/main/java/com/example/swiftyproteins/data/model/Atom.kt).
+
+---
+
+### [📂 bonus-002: Advanced User Interface](man/bonus-002-advanced-user-interface.md)
+* **Custom Card Cells**: High-density list cards with elemental letter avatars, cached availability pills, and bookmarking stars.
+* **Smooth Navigation Animations**: Custom fade transitions across all activities and loading states.
+* **Modern Dark Theme**: OLED-friendly palette (`#10141D` background, `#1A2232` card surfaces, `#02F0FF` cyan accents).
+* **Contextual Controls**: Camera reset, label overlays, model switching, and favorites filtering integrated into clean toolbars.
+* **Key Files**: [`item_protein.xml`](../app/src/main/res/layout/item_protein.xml), [`colors.xml`](../app/src/main/res/values/colors.xml), [`themes.xml`](../app/src/main/res/values/themes.xml).
+
+---
+
+### [📂 bonus-003: Enhanced Molecular Interactions](man/bonus-003-enhanced-molecular-interactions.md)
+* **Dual-Layer Highlighting**: Selected atoms gain a pulsing cyan selection halo, while all other atoms of the same chemical element illuminate with a warm gold glow.
+* **Floating Projected Atom Labels**: 2D overlay (`AtomLabelOverlay`) transforming 3D world coordinates through MVP matrices to project floating CPK-tinted elemental pills above heavy atoms.
+* **Hill Chemical Notation**: Automatic computation of empirical chemical formulas (e.g. `C10H16N5O13P3` for ATP) displayed in stats and share messages.
+* **Camera Centering & Reset**: Centroid-based camera alignment and one-tap reset button.
+* **Key Files**: [`AtomLabelOverlay.kt`](../app/src/main/java/com/example/swiftyproteins/ui/viewer/AtomLabelOverlay.kt), [`ProteinRenderer.kt`](../app/src/main/java/com/example/swiftyproteins/ui/viewer/gl/ProteinRenderer.kt), [`Molecule.kt`](../app/src/main/java/com/example/swiftyproteins/data/model/Molecule.kt).
+
+---
+
+### [📂 bonus-004: Performance and Caching](man/bonus-004-performance-and-caching.md)
+* **Local Disk Caching**: Downloaded CIF files are stored in `filesDir/cif_cache/`, providing instant offline reloading and saving bandwidth.
+* **Multi-Thread Coroutine Architecture**: Network and disk I/O on `Dispatchers.IO`, CPU-intensive CIF tokenization on `Dispatchers.Default`, UI rendering on `Dispatchers.Main`.
+* **Zero-Allocation Render Loop**: Pre-allocated FloatBuffers and static transformation matrices avoid JVM garbage collection pauses.
+* **60+ FPS Guarantee**: VSync synchronization, backface culling (`GL_CULL_FACE`), and hardware depth testing (`GL_DEPTH_TEST`).
+* **Key Files**: [`CifCache.kt`](../app/src/main/java/com/example/swiftyproteins/data/cache/CifCache.kt), [`CifParser.kt`](../app/src/main/java/com/example/swiftyproteins/data/parser/CifParser.kt), [`MoleculeHolder.kt`](../app/src/main/java/com/example/swiftyproteins/data/model/MoleculeHolder.kt).
+
+---
+
+### [📂 bonus-005: Extended Sharing and Export](man/bonus-005-extended-sharing-and-export.md)
+* **Formatted Share Messages**: Enriched metadata payload including ligand name, Hill formula, and structural metrics.
+* **Direct Gallery Export**: Scoped storage compliant export to device photo album (`Pictures/SwiftyProteins`) via Android `MediaStore`.
+* **FileProvider Integration**: Secure content URI exposure (`content://...`) for the Android system share sheet.
+* **Favorites System**: Persistent bookmarking with `FavoritesManager` in `SharedPreferences`, supporting real-time catalog filtering.
+* **Key Files**: [`ProteinViewerActivity.kt`](../app/src/main/java/com/example/swiftyproteins/ui/viewer/ProteinViewerActivity.kt), [`FavoritesManager.kt`](../app/src/main/java/com/example/swiftyproteins/data/favorites/FavoritesManager.kt), [`file_paths.xml`](../app/src/main/res/xml/file_paths.xml).
+
+---
+
+## 3. Quick Reference Index
+
+| ID | Title | Category | Status | Documentation Link |
+|---|---|---|---|---|
+| `feat-001` | Application Icon and Launch Screen | Mandatory | Completed | [man/feat-001-app-icon-and-launch-screen.md](man/feat-001-app-icon-and-launch-screen.md) |
+| `feat-002` | Login View | Mandatory | Completed | [man/feat-002-login-view.md](man/feat-002-login-view.md) |
+| `feat-003` | Protein List View | Mandatory | Completed | [man/feat-003-protein-list-view.md](man/feat-003-protein-list-view.md) |
+| `feat-004` | Protein View | Mandatory | Completed | [man/feat-004-protein-view.md](man/feat-004-protein-view.md) |
+| `bonus-001` | Multiple Visualization Models | Bonus | Completed | [man/bonus-001-multiple-visualization-models.md](man/bonus-001-multiple-visualization-models.md) |
+| `bonus-002` | Advanced User Interface | Bonus | Completed | [man/bonus-002-advanced-user-interface.md](man/bonus-002-advanced-user-interface.md) |
+| `bonus-003` | Enhanced Molecular Interactions | Bonus | Completed | [man/bonus-003-enhanced-molecular-interactions.md](man/bonus-003-enhanced-molecular-interactions.md) |
+| `bonus-004` | Performance and Caching | Bonus | Completed | [man/bonus-004-performance-and-caching.md](man/bonus-004-performance-and-caching.md) |
+| `bonus-005` | Extended Sharing and Export | Bonus | Completed | [man/bonus-005-extended-sharing-and-export.md](man/bonus-005-extended-sharing-and-export.md) |

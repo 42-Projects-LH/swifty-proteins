@@ -1,6 +1,6 @@
 # Application Icon and Launch Screen
 
-The **Application Icon and Launch Screen** feature fulfills the mandatory first impression and branding requirements defined by the 42 project subject. The application provides a customized, high-resolution adaptive launcher icon across all standard Android screen densities and introduces a dedicated launch (splash) screen that stays displayed for at least **1 second** before transitioning seamlessly into the authentication flow.
+The application provides a customised, high-resolution adaptive launcher icon across all standard Android screen densities and introduces a dedicated launch (splash) screen that stays displayed for at least **1 second** before transitioning seamlessly into the authentication flow.
 
 ## Feature Specifications
 

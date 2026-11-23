@@ -11,6 +11,15 @@ APK_RELEASE	:= app/build/outputs/apk/release/app-release-unsigned.apk
 GRADLE		:= ./gradlew
 SCREENSHOT_DIR	:= screenshots
 
+# Auto-detect ANDROID_HOME if not already exported in the environment
+ifndef ANDROID_HOME
+ifneq ($(wildcard $(HOME)/Android/Sdk/platforms),)
+	export ANDROID_HOME := $(HOME)/Android/Sdk
+else ifneq ($(wildcard /usr/lib/android-sdk/platforms),)
+	export ANDROID_HOME := /usr/lib/android-sdk
+endif
+endif
+
 # Device targeting:
 # Pass DEVICE=<serial> to target a specific device, e.g.:
 #   make install DEVICE=ASUS_I006D
@@ -58,7 +67,7 @@ WHITE    := $(shell printf '\033[1;97m')
         start start-usb start-emu run run-usb run-emu \
         stop restart clear-data clear-data-usb uninstall uninstall-usb \
         bio-success bio-fail logs logs-usb logcat-clear devices \
-        screenshot pull-photos shell test lint clean fclean re help
+        screenshot pull-photos shell test lint clean fclean re check-sdk check-cif help
 
 # ------------------------------------------------------------
 #  all — Default target: Build debug APK
@@ -326,6 +335,57 @@ fclean: clean
 	@$(ECHO) ">>> $(GREEN)Full clean completed.$(RESET)"
 
 # ------------------------------------------------------------
+#  check-sdk — Display project SDK config & environment SDKs
+# ------------------------------------------------------------
+
+check-sdk:
+	@$(ECHO) ""
+	@$(ECHO) " >>> $(CYAN)[1/3] Project Android SDK Configuration (app/build.gradle.kts):$(RESET)"
+	@sed -n '7,15p;28,31p' app/build.gradle.kts
+	@$(ECHO) ""
+	@$(ECHO) " >>> $(CYAN)[2/3] Gradle Plugin & Dependencies (gradle/libs.versions.toml):$(RESET)"
+	@head -n 25 gradle/libs.versions.toml
+	@$(ECHO) ""
+	@$(ECHO) " >>> $(CYAN)[3/3] Host Environment Android SDK & Java Versions:$(RESET)"
+	@if [ -n "$$ANDROID_HOME" ] && [ -d "$$ANDROID_HOME/platforms" ]; then \
+		$(ECHO) "   Installed SDK platforms in $$ANDROID_HOME/platforms/:"; \
+		ls -1 "$$ANDROID_HOME/platforms" 2>/dev/null | sed 's/^/     - /'; \
+	elif [ -n "$$ANDROID_SDK_ROOT" ] && [ -d "$$ANDROID_SDK_ROOT/platforms" ]; then \
+		$(ECHO) "   Installed SDK platforms in $$ANDROID_SDK_ROOT/platforms/:"; \
+		ls -1 "$$ANDROID_SDK_ROOT/platforms" 2>/dev/null | sed 's/^/     - /'; \
+	elif [ -d "/home/firstmate/Android/Sdk/platforms" ]; then \
+		$(ECHO) "   Installed SDK platforms in /home/firstmate/Android/Sdk/platforms/:"; \
+		ls -1 "/home/firstmate/Android/Sdk/platforms" 2>/dev/null | sed 's/^/     - /'; \
+	elif [ -d "/usr/lib/android-sdk/platforms" ]; then \
+		$(ECHO) "   Installed SDK platforms in /usr/lib/android-sdk/platforms/:"; \
+		ls -1 "/usr/lib/android-sdk/platforms" 2>/dev/null | sed 's/^/     - /'; \
+	else \
+		$(ECHO) "   No standard Android SDK platform directory found automatically."; \
+		$(ECHO) "   Check ANDROID_HOME or Android Studio > SDK Manager."; \
+	fi
+	@if command -v java >/dev/null 2>&1; then \
+		$(ECHO) "   Java Runtime:"; \
+		java -version 2>&1 | sed 's/^/     /'; \
+	fi
+	@$(ECHO) ""
+
+# ------------------------------------------------------------
+#  check-cif — Display RCSB CIF endpoint and parser wiring
+# ------------------------------------------------------------
+
+check-cif:
+	@$(ECHO) ""
+	@$(ECHO) " >>> $(CYAN)[1/3] RCSB Base URL (app/.../data/network/NetworkClient.kt):$(RESET)"
+	@sed -n '11p' app/src/main/java/com/example/swiftyproteins/data/network/NetworkClient.kt | sed 's/^[ \t]*/   /'
+	@$(ECHO) ""
+	@$(ECHO) " >>> $(CYAN)[2/3] CIF Endpoint Definition (app/.../data/network/RcsbApiService.kt):$(RESET)"
+	@sed -n '9,10p' app/src/main/java/com/example/swiftyproteins/data/network/RcsbApiService.kt | sed 's/^[ \t]*/   /'
+	@$(ECHO) ""
+	@$(ECHO) " >>> $(CYAN)[3/3] CIF Parser & Loop Parsing (app/.../data/parser/CifParser.kt):$(RESET)"
+	@grep -n -E "loop_|_chem_comp_atom|_chem_comp_bond|model_Cartn" app/src/main/java/com/example/swiftyproteins/data/parser/CifParser.kt | head -n 8 | sed 's/^[ \t]*/   /'
+	@$(ECHO) ""
+
+# ------------------------------------------------------------
 #  re — Clean everything and rebuild
 # ------------------------------------------------------------
 
@@ -365,6 +425,8 @@ help:
 	@$(ECHO) "     $(CYAN)shell$(RESET)            Open interactive ADB shell on device"
 	@$(ECHO) "     $(CYAN)test$(RESET)             Run unit tests"
 	@$(ECHO) "     $(CYAN)lint$(RESET)             Run Android lint checks"
+	@$(ECHO) "     $(CYAN)check-sdk$(RESET)        Display project SDK config & machine SDK versions"
+	@$(ECHO) "     $(CYAN)check-cif$(RESET)        Display RCSB .cif endpoint and parser implementation"
 	@$(ECHO) "     $(CYAN)clean$(RESET)            Clean Gradle build artifacts"
 	@$(ECHO) "     $(CYAN)fclean$(RESET)           Full reset: Gradle clean, remove screenshots, uninstall"
 	@$(ECHO) "     $(CYAN)re$(RESET)               Clean everything and rebuild"

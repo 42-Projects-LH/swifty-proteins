@@ -344,7 +344,6 @@ class ProteinRenderer : GLSurfaceView.Renderer {
             }
             RenderModel.WIREFRAME -> {
                 drawWireframe()
-                drawSmallAtomCaps(mol, capRadius = 0.15f)
             }
         }
 

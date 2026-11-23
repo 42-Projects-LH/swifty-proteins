@@ -38,7 +38,7 @@ flowchart TD
 - **Auto-Prompt on Launch**: If an account exists and valid biometrics are enrolled, the biometric prompt appears automatically on launch for fast access.
 - **Hardware & Enrollment Graceful Fallback**:
   - `BIOMETRIC_ERROR_NONE_ENROLLED`: Prompts an alert explaining no fingerprint is enrolled with a direct button to open Android Security Settings.
-  - `BIOMETRIC_ERROR_NO_HARDWARE` / `HW_UNAVAILABLE`: Informs the user via alert dialog and falls back seamlessly to password login.
+  - `BIOMETRIC_ERROR_NO_HARDWARE` / `HW_UNAVAILABLE`: Automatically hides the biometric login button and divider when biometric hardware is unavailable on the device, falling back seamlessly to username and password login.
 - **Authentication Failure Handling**: When an unrecognized fingerprint is tapped, an informative alert dialog offers an immediate **Retry** button or password fallback without crashing or freezing.
 
 ### Security Requirements & Cryptographic Storage
@@ -79,6 +79,7 @@ User records are persisted in `EncryptedSharedPreferences` using:
 | [`SwiftyProteinsApp.kt`](file:///home/firstmate/GitHub/swifty-proteins/app/src/main/java/com/example/swiftyproteins/SwiftyProteinsApp.kt) | Kotlin Source | Application subclass registering `ProcessLifecycleOwner` observer and maintaining the session lock flag. |
 | [`AppLifecycleObserver.kt`](file:///home/firstmate/GitHub/swifty-proteins/app/src/main/java/com/example/swiftyproteins/util/AppLifecycleObserver.kt) | Kotlin Source | Implements `DefaultLifecycleObserver.onStop` to detect whole-app backgrounding. |
 | [`ProteinListActivity.kt`](file:///home/firstmate/GitHub/swifty-proteins/app/src/main/java/com/example/swiftyproteins/ui/protein/ProteinListActivity.kt) | Kotlin Source | Checks `SwiftyProteinsApp.isSessionLocked` in `onResume()` and redirects to `LoginActivity` when locked. |
+| [`ProteinViewerActivity.kt`](file:///home/firstmate/GitHub/swifty-proteins/app/src/main/java/com/example/swiftyproteins/ui/viewer/ProteinViewerActivity.kt) | Kotlin Source | Checks `SwiftyProteinsApp.isSessionLocked` in `onResume()` and redirects to `LoginActivity` when locked. |
 | [`activity_login.xml`](file:///home/firstmate/GitHub/swifty-proteins/app/src/main/res/layout/activity_login.xml) | XML Layout | Responsive layout containing username/password input fields, biometric trigger button, and mode toggle. |
 
 ## Testing and Verification

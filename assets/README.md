@@ -49,7 +49,7 @@ The bonus section extends the application with advanced biochemical visualizatio
   1. **Ball & Stick**: Baseline representation with atomic spheres and cylindrical covalent bonds.
   2. **Space-Filling (CPK / Calotte)**: Scaled by empirical Van der Waals radii displaying true steric volume.
   3. **Stick (Licorice)**: Thick cylindrical bonds with small atom joint caps for clear bond topology.
-  4. **Wireframe**: Lightweight glowing line network (`GL_LINES`) with atomic node joints.
+  4. **Wireframe**: Lightweight glowing line network (`GL_LINES`) displaying only the bonds without atom spheres.
 * **In-Place UI Switching**: Floating toggle button cycles through models instantaneously without reloading or re-fetching data.
 * **Adaptive Raycasting**: Raycast hit detection automatically expands in Space-Filling mode to match Van der Waals boundaries.
 * **Key Files**: [`ProteinRenderer.kt`](../app/src/main/java/com/example/swiftyproteins/ui/viewer/gl/ProteinRenderer.kt), [`ProteinViewerActivity.kt`](../app/src/main/java/com/example/swiftyproteins/ui/viewer/ProteinViewerActivity.kt), [`Atom.kt`](../app/src/main/java/com/example/swiftyproteins/data/model/Atom.kt).

@@ -10,6 +10,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.biometric.BiometricManager
 import androidx.biometric.BiometricPrompt
 import androidx.core.content.ContextCompat
+import com.example.swiftyproteins.SwiftyProteinsApp
 import com.example.swiftyproteins.databinding.ActivityLoginBinding
 import com.example.swiftyproteins.ui.protein.ProteinListActivity
 import com.example.swiftyproteins.util.SecureStorage
@@ -61,6 +62,20 @@ class LoginActivity : AppCompatActivity() {
         }
     }
 
+    override fun onResume() {
+        super.onResume()
+        updateUiMode()
+    }
+
+    private fun isBiometricHardwareSupported(): Boolean {
+        val biometricManager = BiometricManager.from(this)
+        val canAuth = biometricManager.canAuthenticate(
+            BiometricManager.Authenticators.BIOMETRIC_STRONG or BiometricManager.Authenticators.BIOMETRIC_WEAK
+        )
+        return canAuth == BiometricManager.BIOMETRIC_SUCCESS ||
+                canAuth == BiometricManager.BIOMETRIC_ERROR_NONE_ENROLLED
+    }
+
     private fun updateUiMode() {
         if (isRegisterMode) {
             binding.tvSubtitle.text = "Create a new account"
@@ -74,8 +89,9 @@ class LoginActivity : AppCompatActivity() {
             binding.tilConfirmPassword.visibility = View.GONE
             binding.btnSubmit.text = "Log In"
             binding.btnToggleMode.text = "Don't have an account? Register"
-            binding.layoutBiometricDivider.visibility = View.VISIBLE
-            binding.btnBiometric.visibility = View.VISIBLE
+            val showBiometricOption = isBiometricHardwareSupported()
+            binding.layoutBiometricDivider.visibility = if (showBiometricOption) View.VISIBLE else View.GONE
+            binding.btnBiometric.visibility = if (showBiometricOption) View.VISIBLE else View.GONE
         }
     }
 
@@ -252,6 +268,7 @@ class LoginActivity : AppCompatActivity() {
     }
 
     private fun proceedToApp() {
+        SwiftyProteinsApp.isSessionLocked = false
         startActivity(Intent(this, ProteinListActivity::class.java))
         finish()
     }

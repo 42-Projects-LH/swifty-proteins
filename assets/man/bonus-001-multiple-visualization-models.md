@@ -41,7 +41,7 @@ Users can cycle dynamically between representations with a single tap of an on-s
 - **Concept**: Ultra-lightweight skeletal line rendering illustrating purely the bonding network.
 - **Visual Appearance**:
   - Uses native OpenGL ES line primitives (`GLES20.glDrawArrays(GL_LINES)` with line width $3.0\text{f}$).
-  - Shaded with a glowing cyan line shader (`#02F0FF`) and tiny atom position nodes (`capRadius = 0.15f`).
+  - Shaded with a glowing cyan line shader (`#02F0FF`) displaying only the bonds as lines without atom spheres.
 - **Performance**: Extremely lightweight geometry ideal for low-end GPU hardware or massive macromolecular assemblies.
 
 ### UI Control & State Management
@@ -80,7 +80,7 @@ Users can cycle dynamically between representations with a single tap of an on-s
    - Button text updates to `"Stick"`.
 7. Tap the button again.
 8. Verify transition to **Wireframe**:
-   - Model turns into sharp glowing cyan lines with node points.
+   - Model turns into sharp glowing cyan bond lines without atom spheres.
    - Button text updates to `"Wireframe"`.
 9. Tap once more. Verify it smoothly returns to **Ball & Stick**.
 

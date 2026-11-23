@@ -12,9 +12,11 @@ import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.FileProvider
+import com.example.swiftyproteins.SwiftyProteinsApp
 import com.example.swiftyproteins.data.model.Atom
 import com.example.swiftyproteins.data.model.MoleculeHolder
 import com.example.swiftyproteins.databinding.ActivityProteinViewerBinding
+import com.example.swiftyproteins.ui.auth.LoginActivity
 import com.example.swiftyproteins.ui.viewer.gl.RenderModel
 import java.io.File
 import java.io.FileOutputStream
@@ -196,14 +198,25 @@ class ProteinViewerActivity : AppCompatActivity() {
                 addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
             }
 
+            SwiftyProteinsApp.isHandlingExternalIntent = true
             startActivity(Intent.createChooser(shareIntent, "Share Protein Model"))
         } catch (e: Exception) {
+            SwiftyProteinsApp.isHandlingExternalIntent = false
             Toast.makeText(this, "Failed to share: ${e.localizedMessage}", Toast.LENGTH_SHORT).show()
         }
     }
 
     override fun onResume() {
         super.onResume()
+        if (SwiftyProteinsApp.isSessionLocked) {
+            SwiftyProteinsApp.isSessionLocked = false
+            val intent = Intent(this, LoginActivity::class.java).apply {
+                flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_CLEAR_TASK
+            }
+            startActivity(intent)
+            finish()
+            return
+        }
         binding.glSurfaceView.onResume()
     }
 

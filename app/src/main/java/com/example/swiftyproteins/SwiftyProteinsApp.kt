@@ -8,13 +8,18 @@ class SwiftyProteinsApp : Application() {
 
     companion object {
         var isSessionLocked: Boolean = false
+        var isHandlingExternalIntent: Boolean = false
     }
 
     override fun onCreate() {
         super.onCreate()
         val lifecycleObserver = AppLifecycleObserver {
             // Triggered whenever the entire application goes into background
-            isSessionLocked = true
+            if (isHandlingExternalIntent) {
+                isHandlingExternalIntent = false
+            } else {
+                isSessionLocked = true
+            }
         }
         ProcessLifecycleOwner.get().lifecycle.addObserver(lifecycleObserver)
     }

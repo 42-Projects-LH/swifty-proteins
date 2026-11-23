@@ -1,6 +1,6 @@
 # Login View
 
-The **Login View** provides a secure authentication gateway protecting access to the molecular exploration database. It combines standard credential-based registration and login with hardware-backed Android **Biometric Authentication** (Fingerprint and Face Unlock). In accordance with the 42 subject specifications, the security architecture strictly forbids storing passwords in plaintext, implements zero-leakage cryptographic storage, and enforces whole-application session locking upon backgrounding.
+The **Login View** provides a secure authentication gateway protecting access to the molecular exploration database. It combines standard credential-based registration and login with hardware-backed Android **Biometric Authentication** (Fingerprint and Face Unlock). The security architecture strictly forbids storing passwords in plaintext, implements zero-leakage cryptographic storage, and enforces whole-application session locking upon backgrounding.
 
 ## Authentication Architecture
 

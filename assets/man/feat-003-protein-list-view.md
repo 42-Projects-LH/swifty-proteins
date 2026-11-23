@@ -23,7 +23,7 @@ The **Protein List View** serves as the primary catalog and discovery screen of 
 - **Local Disk Cache Bypass**: If the requested ligand has been previously downloaded, `CifCache` reads directly from local storage, skipping network latency.
 
 ### Spinning Wheel Loading Animation
-- In accordance with the 42 subject requirements, whenever a ligand is tapped:
+- Whenever a ligand is tapped:
   - A centered modal loading overlay (`loadingOverlay`) becomes visible with a circular spinning wheel (`ProgressBar`).
   - The status message updates dynamically:
     - `"Loading {ID}..."` (from cache)

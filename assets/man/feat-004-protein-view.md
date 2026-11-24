@@ -1,10 +1,6 @@
 # Protein View
 
-## Overview
-
 The **Protein View** is the central 3D visualization engine of Swifty Proteins. Powered by custom **OpenGL ES 2.0**, it renders molecular structures in three dimensions using spherical atomic geometries and cylindrical chemical bonds. Users can freely manipulate the camera using touch gestures (orbit rotation, pinch-to-zoom, pan), interact with individual atoms via 3D raycasting to reveal elemental tooltips, toggle floating atomic labels, and export or share high-resolution renderings.
-
----
 
 ## 3D Rendering Architecture
 
@@ -24,11 +20,9 @@ flowchart LR
     Screenshot --> IntentSend[System Share Sheet]
 ```
 
----
-
 ## Feature Specifications
 
-### 1. CPK Coloring
+### CPK Coloring
 Atoms are shaded strictly adhering to the standard **Corey-Pauling-Koltun (CPK)** chemical color scheme defined in `Atom.kt`:
 
 | Element | Symbol | Color | Hex Representation |
@@ -52,12 +46,12 @@ Atoms are shaded strictly adhering to the standard **Corey-Pauling-Koltun (CPK)*
 | **Copper** | `CU` | Bronze | `#C88033` |
 | **Other / Unknown** | `*` | Deep Pink | `#FF1493` |
 
-### 2. Ball-and-Stick Model
+### Ball-and-Stick Model
 - **Atoms**: Rendered as tessellated 3D UV spheres (`SphereMesh.kt`, 20 stacks × 20 slices) scaled by elemental radius (`ballRadius`).
 - **Chemical Bonds**: Rendered as smooth 3D cylinders (`CylinderMesh.kt`, 16 radial segments) scaled and rotated to connect adjacent atom coordinates.
 - **Transformation Matrix**: A custom matrix transformation (`computeCylinderTransform`) aligns cylinders along the 3D directional vector between bonded atom centers, avoiding visual gaps.
 
-### 3. Atom Information & Raycast Selection
+### Atom Information & Raycast Selection
 - **3D Raycasting**: Single-tapping the screen fires `RaycastPicker.pickAtom()`. The 2D screen coordinate is converted into Normalized Device Coordinates (NDC) and unprojected into world space via the inverted Model-View-Projection matrix (`Matrix.invertM(invMvpMatrix, 0, mvpMatrix, 0)`).
 - **Ray-Sphere Intersection**: Calculates quadratic intersection discriminants against all atom spheres. The closest atom intersecting the camera ray is selected.
 - **Interactive Tooltip Card**: Displays:
@@ -70,7 +64,7 @@ Atoms are shaded strictly adhering to the standard **Corey-Pauling-Koltun (CPK)*
   - All matching atoms of the same chemical element in the molecule are highlighted with a gold halo (`drawElementHighlight`).
 - **Dismissal**: Tapping the close button `(✕)` or tapping empty 3D space immediately dismisses the tooltip.
 
-### 4. Share Functionality
+### Share Functionality
 - Tapping the **Share** button triggers an asynchronous framebuffer capture:
   - `GLES20.glReadPixels()` reads the active OpenGL ES 2.0 viewport into a direct byte buffer.
   - Image bytes are inverted vertically and converted to an ARGB-8888 bitmap.
@@ -84,7 +78,7 @@ Atoms are shaded strictly adhering to the standard **Corey-Pauling-Koltun (CPK)*
   Rendered with Swifty Proteins — RCSB PDB
   ```
 
-### 5. Camera and Lighting
+### Camera and Lighting
 - **Automatic Framing**: Centroid normalization offsets the molecule center to `(0, 0, 0)` and computes the bounding radius. The camera distance defaults to `boundingRadius * 3.2f`, ensuring any molecule fits comfortably in the viewport upon opening.
 - **Touch Gesture Controls** (`ProteinSurfaceView.kt`):
   - **1-Finger Drag**: Smooth orbit rotation (pitch and yaw). Pitch is clamped to `[-89°, 89°]` to prevent disorientation from inverted gimbal lock.
@@ -92,8 +86,6 @@ Atoms are shaded strictly adhering to the standard **Corey-Pauling-Koltun (CPK)*
   - **2-Finger Drag**: Panning translation along the camera view plane (`panX`, `panY`).
   - **Reset Camera Button**: Instantly restores default center, zoom distance, and orbit angles.
 - **Phong Lighting Model**: Custom GLSL vertex and fragment shaders evaluate ambient (30%), diffuse (70%), and specular reflection (shininess exponent 32.0) with an eye-space directional light source.
-
----
 
 ## Relevant Files in the Codebase
 
@@ -111,11 +103,9 @@ Atoms are shaded strictly adhering to the standard **Corey-Pauling-Koltun (CPK)*
 | [`Bond.kt`](../../app/src/main/java/com/example/swiftyproteins/data/model/Bond.kt) | Kotlin Source | Data class representing covalent connections between atom IDs. |
 | [`activity_protein_viewer.xml`](../../app/src/main/res/layout/activity_protein_viewer.xml) | XML Layout | Layout combining GLSurfaceView, overlay, action buttons, and atom tooltip card. |
 
----
-
 ## Testing and Verification
 
-### 1. Manual Evaluation Scenarios
+### Manual Evaluation Scenarios
 
 #### Scenario A: 3D Visualization & CPK Coloring
 1. Open ligand `ATP` or `HEM` from the list.
@@ -151,7 +141,7 @@ Atoms are shaded strictly adhering to the standard **Corey-Pauling-Koltun (CPK)*
 3. Verify the Android system share sheet opens displaying the rendered 3D snapshot, ligand name, chemical formula, and atom count.
 4. Open the Android **Gallery** / **Photos** app. Confirm that a new image exists under `Pictures/SwiftyProteins`.
 
-### 2. ADB / Makefile Commands
+### ADB / Makefile Commands
 
 ```bash
 # Pull exported 3D snapshots from device to local machine
@@ -163,11 +153,3 @@ make screenshot
 # Verify media store insertion on device
 adb shell content query --uri content://media/external/images/media --projection _display_name:relative_path
 ```
-
-### 3. Evaluation Checklist Alignment
-- [x] Molecule renders in full 3D with atoms and bonds.
-- [x] Standard CPK coloring is applied correctly.
-- [x] Smooth gesture controls (1-finger rotation, 2-finger pinch zoom).
-- [x] Tapping an atom displays its name and coordinates in a tooltip.
-- [x] Tapping elsewhere dismisses the tooltip.
-- [x] Share button captures current 3D frame, saves to photo album, and opens share sheet.

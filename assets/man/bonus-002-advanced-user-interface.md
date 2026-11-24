@@ -60,7 +60,7 @@ View navigation, asynchronous data loading, and interactive controls incorporate
 
 ## Dark Mode
 
-Swifty Proteins implements a Day/Night theme system built on Material 3 (`Theme.Material3.DayNight.NoActionBar`) with dedicated light (`res/values/themes.xml`) and night (`res/values-night/themes.xml`) resource qualifiers backed by semantic color tokens in `res/values/colors.xml`. When system Dark Mode is enabled, window and card surfaces switch from `#F5F7FA` (`surface_light`) and `#FFFFFF` (`card_light`) with `#1A1A2E` text (`on_surface_light`) to an OLED-optimized deep space navy `#10141D` (`surface_dark`) and elevated slate `#161B26` (`card_dark`) with high-contrast `#E2E8F0` text (`on_surface_dark`), accented by primary cyan (`#01EFFE`) and secondary pink (`#FE2F63`). The 3D molecular viewer (`activity_protein_viewer.xml` and `ProteinRenderer.kt`) integrates seamlessly with this dark palette by clearing the OpenGL viewport to `#10141D` (`GLES20.glClearColor(0.063f, 0.078f, 0.114f, 1.0f)`), framing the scene with translucent dark overlays (`#CC161B26` toolbars and `#E6181D29` tooltip card with `#3301EFFE` cyan border), and applying an eye-space Blinn-Phong shader (`ambient = 0.30`, `diffuse = 0.70`, `specular = 0.60`, directional light vector `(0.35f, 0.65f, 1.0f)`) calibrated to give 3D CPK spheres and bonds strong depth and specular contrast against the dark background.
+Swifty Proteins implements a Day/Night theme system built on Material 3 (`Theme.Material3.DayNight.NoActionBar`) that is **automatically synced with the phone's system theme**, using dedicated light (`res/values/themes.xml`) and night (`res/values-night/themes.xml`) resource qualifiers backed by semantic color tokens in `res/values/colors.xml`. Whenever the phone is switched between Light and Dark theme in system settings, window and card surfaces switch from `#F5F7FA` (`surface_light`) and `#FFFFFF` (`card_light`) with `#1A1A2E` text (`on_surface_light`) to an OLED-optimized deep space navy `#10141D` (`surface_dark`) and elevated slate `#161B26` (`card_dark`) with high-contrast `#E2E8F0` text (`on_surface_dark`), accented by primary cyan (`#01EFFE`) and secondary pink (`#FE2F63`). The 3D molecular viewer (`activity_protein_viewer.xml` and `ProteinRenderer.kt`) integrates seamlessly with this dark palette by clearing the OpenGL viewport to `#10141D` (`GLES20.glClearColor(0.063f, 0.078f, 0.114f, 1.0f)`), framing the scene with translucent dark overlays (`#CC161B26` toolbars and `#E6181D29` tooltip card with `#3301EFFE` cyan border), and applying an eye-space Blinn-Phong shader (`ambient = 0.30`, `diffuse = 0.70`, `specular = 0.60`, directional light vector `(0.35f, 0.65f, 1.0f)`) calibrated to give 3D CPK spheres and bonds strong depth and specular contrast against the dark background.
 
 ### Relevant Files in the Codebase
 
@@ -74,12 +74,12 @@ Swifty Proteins implements a Day/Night theme system built on Material 3 (`Theme.
 
 ### How to test
 
-1. Toggle Dark Mode on the Android device or emulator via the system Quick Settings tile or via ADB:
+1. Since the app theme is synced with the phone's system theme, switch the device between Light and Dark theme either in the phone's **Settings → Display** menu or live via ADB:
    ```bash
-   # Enable Dark Mode
+   # Enable Dark Mode on connected device
    adb shell cmd uimode night yes
 
-   # Enable Light Mode
+   # Enable Light Mode on connected device
    adb shell cmd uimode night no
    ```
 2. Navigate through `LoginActivity` and `ProteinListActivity` in both modes: verify that backgrounds, Material cards, text contrast, dividers, and outlined star icons (`?attr/colorOnSurface`) adapt automatically without illegible text or visual artifacts.

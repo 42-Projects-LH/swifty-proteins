@@ -7,7 +7,7 @@ The **Protein List View** serves as the primary catalog and discovery screen of 
 ### Catalog Loading & Dataset
 - **Asset Ingestion**: On creation, `ProteinListActivity` reads `ligands.txt` line-by-line from bundled assets via `BufferedReader`.
 - **High-Performance RecyclerView**: Utilizes `ProteinAdapter` with `LinearLayoutManager` for smooth scrolling and view recycling.
-- **Card Design**: Custom list item cards (`item_protein.xml`) displaying the ligand identifier, elemental badge icon, local cache availability badge (`CACHED`), and interactive favorite toggle star.
+- **Card Design**: Custom list item cards (`item_protein.xml`) displaying the ligand identifier, molecular ring badge icon (`⬡`), local cache availability badge (`offline`), and interactive favorite toggle star.
 
 ### Search & Real-Time Query Filtering
 - Integrated Android `SearchView` at the top of the view.
@@ -41,15 +41,15 @@ Any failure encountered during retrieval or parsing triggers an informative `Ale
 
 | File | Type | Description |
 |---|---|---|
-| [`ProteinListActivity.kt`](file:///home/firstmate/GitHub/swifty-proteins/app/src/main/java/com/example/swiftyproteins/ui/protein/ProteinListActivity.kt) | Kotlin Source | Coordinates catalog loading, search bar events, coroutine network dispatch, and loading overlay state. |
-| [`ProteinAdapter.kt`](file:///home/firstmate/GitHub/swifty-proteins/app/src/main/java/com/example/swiftyproteins/ui/protein/ProteinAdapter.kt) | Kotlin Source | RecyclerView adapter supporting real-time filtering, favorites filtering, and cache badges. |
-| [`NetworkClient.kt`](file:///home/firstmate/GitHub/swifty-proteins/app/src/main/java/com/example/swiftyproteins/data/network/NetworkClient.kt) | Kotlin Source | Configures Retrofit and OkHttp with logging interceptor and 15s timeout thresholds. |
-| [`RcsbApiService.kt`](file:///home/firstmate/GitHub/swifty-proteins/app/src/main/java/com/example/swiftyproteins/data/network/RcsbApiService.kt) | Kotlin Source | Retrofit interface for fetching ligand CIF content by ID. |
-| [`CifParser.kt`](file:///home/firstmate/GitHub/swifty-proteins/app/src/main/java/com/example/swiftyproteins/data/parser/CifParser.kt) | Kotlin Source | Parses CIF loops (`_chem_comp_atom` and `_chem_comp_bond`) into 3D `Molecule` models. |
-| [`CifCache.kt`](file:///home/firstmate/GitHub/swifty-proteins/app/src/main/java/com/example/swiftyproteins/data/cache/CifCache.kt) | Kotlin Source | Manages disk caching under `filesDir/cif_cache/` to minimize network overhead. |
-| [`activity_protein_list.xml`](file:///home/firstmate/GitHub/swifty-proteins/app/src/main/res/layout/activity_protein_list.xml) | XML Layout | Layout defining search bar, favorites filter button, RecyclerView, and spinning wheel overlay. |
-| [`item_protein.xml`](file:///home/firstmate/GitHub/swifty-proteins/app/src/main/res/layout/item_protein.xml) | XML Layout | Layout for individual ligand cards in the catalog. |
-| [`ligands.txt`](file:///home/firstmate/GitHub/swifty-proteins/app/src/main/assets/ligands.txt) | Asset | Bundled text file listing candidate ligand identifiers. |
+| [`ProteinListActivity.kt`](../../app/src/main/java/com/example/swiftyproteins/ui/protein/ProteinListActivity.kt) | Kotlin Source | Coordinates catalog loading, search bar events, coroutine network dispatch, and loading overlay state. |
+| [`ProteinAdapter.kt`](../../app/src/main/java/com/example/swiftyproteins/ui/protein/ProteinAdapter.kt) | Kotlin Source | RecyclerView adapter supporting real-time filtering, favorites filtering, and cache badges. |
+| [`NetworkClient.kt`](../../app/src/main/java/com/example/swiftyproteins/data/network/NetworkClient.kt) | Kotlin Source | Configures Retrofit and OkHttp with logging interceptor and 15s timeout thresholds. |
+| [`RcsbApiService.kt`](../../app/src/main/java/com/example/swiftyproteins/data/network/RcsbApiService.kt) | Kotlin Source | Retrofit interface for fetching ligand CIF content by ID. |
+| [`CifParser.kt`](../../app/src/main/java/com/example/swiftyproteins/data/parser/CifParser.kt) | Kotlin Source | Parses CIF loops (`_chem_comp_atom` and `_chem_comp_bond`) into 3D `Molecule` models. |
+| [`CifCache.kt`](../../app/src/main/java/com/example/swiftyproteins/data/cache/CifCache.kt) | Kotlin Source | Manages disk caching under `filesDir/cif_cache/` to minimize network overhead. |
+| [`activity_protein_list.xml`](../../app/src/main/res/layout/activity_protein_list.xml) | XML Layout | Layout defining search bar, favorites filter button, RecyclerView, and spinning wheel overlay. |
+| [`item_protein.xml`](../../app/src/main/res/layout/item_protein.xml) | XML Layout | Layout for individual ligand cards in the catalog. |
+| [`ligands.txt`](../../app/src/main/assets/ligands.txt) | Asset | Bundled text file listing candidate ligand identifiers. |
 
 ## Testing and Verification
 

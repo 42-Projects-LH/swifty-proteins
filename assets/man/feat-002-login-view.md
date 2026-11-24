@@ -74,13 +74,13 @@ User records are persisted in `EncryptedSharedPreferences` using:
 
 | File | Type | Description |
 |---|---|---|
-| [`LoginActivity.kt`](file:///home/firstmate/GitHub/swifty-proteins/app/src/main/java/com/example/swiftyproteins/ui/auth/LoginActivity.kt) | Kotlin Source | Handles registration, credential validation, BiometricPrompt callbacks, and error alerts. |
-| [`SecureStorage.kt`](file:///home/firstmate/GitHub/swifty-proteins/app/src/main/java/com/example/swiftyproteins/util/SecureStorage.kt) | Kotlin Source | Hardware-backed MasterKey, EncryptedSharedPreferences, SecureRandom salt generation, and SHA-256 hashing. |
-| [`SwiftyProteinsApp.kt`](file:///home/firstmate/GitHub/swifty-proteins/app/src/main/java/com/example/swiftyproteins/SwiftyProteinsApp.kt) | Kotlin Source | Application subclass registering `ProcessLifecycleOwner` observer and maintaining the session lock flag. |
-| [`AppLifecycleObserver.kt`](file:///home/firstmate/GitHub/swifty-proteins/app/src/main/java/com/example/swiftyproteins/util/AppLifecycleObserver.kt) | Kotlin Source | Implements `DefaultLifecycleObserver.onStop` to detect whole-app backgrounding. |
-| [`ProteinListActivity.kt`](file:///home/firstmate/GitHub/swifty-proteins/app/src/main/java/com/example/swiftyproteins/ui/protein/ProteinListActivity.kt) | Kotlin Source | Checks `SwiftyProteinsApp.isSessionLocked` in `onResume()` and redirects to `LoginActivity` when locked. |
-| [`ProteinViewerActivity.kt`](file:///home/firstmate/GitHub/swifty-proteins/app/src/main/java/com/example/swiftyproteins/ui/viewer/ProteinViewerActivity.kt) | Kotlin Source | Checks `SwiftyProteinsApp.isSessionLocked` in `onResume()` and redirects to `LoginActivity` when locked. |
-| [`activity_login.xml`](file:///home/firstmate/GitHub/swifty-proteins/app/src/main/res/layout/activity_login.xml) | XML Layout | Responsive layout containing username/password input fields, biometric trigger button, and mode toggle. |
+| [`LoginActivity.kt`](../../app/src/main/java/com/example/swiftyproteins/ui/auth/LoginActivity.kt) | Kotlin Source | Handles registration, credential validation, BiometricPrompt callbacks, and error alerts. |
+| [`SecureStorage.kt`](../../app/src/main/java/com/example/swiftyproteins/util/SecureStorage.kt) | Kotlin Source | Hardware-backed MasterKey, EncryptedSharedPreferences, SecureRandom salt generation, and SHA-256 hashing. |
+| [`SwiftyProteinsApp.kt`](../../app/src/main/java/com/example/swiftyproteins/SwiftyProteinsApp.kt) | Kotlin Source | Application subclass registering `ProcessLifecycleOwner` observer and maintaining the session lock flag. |
+| [`AppLifecycleObserver.kt`](../../app/src/main/java/com/example/swiftyproteins/util/AppLifecycleObserver.kt) | Kotlin Source | Implements `DefaultLifecycleObserver.onStop` to detect whole-app backgrounding. |
+| [`ProteinListActivity.kt`](../../app/src/main/java/com/example/swiftyproteins/ui/protein/ProteinListActivity.kt) | Kotlin Source | Checks `SwiftyProteinsApp.isSessionLocked` in `onResume()` and redirects to `LoginActivity` when locked. |
+| [`ProteinViewerActivity.kt`](../../app/src/main/java/com/example/swiftyproteins/ui/viewer/ProteinViewerActivity.kt) | Kotlin Source | Checks `SwiftyProteinsApp.isSessionLocked` in `onResume()` and redirects to `LoginActivity` when locked. |
+| [`activity_login.xml`](../../app/src/main/res/layout/activity_login.xml) | XML Layout | Responsive layout containing username/password input fields, biometric trigger button, and mode toggle. |
 
 ## Testing and Verification
 

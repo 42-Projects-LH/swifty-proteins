@@ -4,7 +4,7 @@ The **Performance and Caching** features optimize the application for better per
 
 ## Features List
 
-Status | Feature | Decription
+Status | Feature | Description
 :--- | :--- | :---
 ⚪ | **Local Caching** | Cache downloaded `.cif` files locally so previously viewed ligands can be accessed offline.
 ⚪ | **Lazy Loading** | Implement efficient lazy loading for the ligand list if it contains many items.
@@ -24,10 +24,10 @@ Status | Feature | Decription
 
 | File | Type | Description |
 |---|---|---|
-| [`CifCache.kt`](file:///home/firstmate/GitHub/swifty-proteins/app/src/main/java/com/example/swiftyproteins/data/cache/CifCache.kt) | Kotlin Source | Manages persistent disk caching (`has`, `read`, `write`) under `context.filesDir/cif_cache/`. |
-| [`ProteinListActivity.kt`](file:///home/firstmate/GitHub/swifty-proteins/app/src/main/java/com/example/swiftyproteins/ui/protein/ProteinListActivity.kt) | Kotlin Source | Implements the cache-first lookup strategy in `onProteinSelected()`, bypassing network calls on cache hits and writing new downloads to `CifCache`. |
-| [`ProteinAdapter.kt`](file:///home/firstmate/GitHub/swifty-proteins/app/src/main/java/com/example/swiftyproteins/ui/protein/ProteinAdapter.kt) | Kotlin Source | Toggles `tvCachedBadge` (`"offline"`) visibility based on `CifCache.has(context, proteinId)`. |
-| [`bg_badge_cached.xml`](file:///home/firstmate/GitHub/swifty-proteins/app/src/main/res/drawable/bg_badge_cached.xml) | XML Drawable | Rounded cyan badge drawable indicating that a ligand is cached on device storage. |
+| [`CifCache.kt`](../../app/src/main/java/com/example/swiftyproteins/data/cache/CifCache.kt) | Kotlin Source | Manages persistent disk caching (`has`, `read`, `write`) under `context.filesDir/cif_cache/`. |
+| [`ProteinListActivity.kt`](../../app/src/main/java/com/example/swiftyproteins/ui/protein/ProteinListActivity.kt) | Kotlin Source | Implements the cache-first lookup strategy in `onProteinSelected()`, bypassing network calls on cache hits and writing new downloads to `CifCache`. |
+| [`ProteinAdapter.kt`](../../app/src/main/java/com/example/swiftyproteins/ui/protein/ProteinAdapter.kt) | Kotlin Source | Toggles `tvCachedBadge` (`"offline"`) visibility based on `CifCache.has(context, proteinId)`. |
+| [`bg_badge_cached.xml`](../../app/src/main/res/drawable/bg_badge_cached.xml) | XML Drawable | Rounded cyan badge drawable indicating that a ligand is cached on device storage. |
 
 ### How to test
 
@@ -43,10 +43,10 @@ Rather than pre-downloading or parsing `.cif` structures upfront for the entire 
 
 | File | Type | Description |
 |---|---|---|
-| [`ProteinListActivity.kt`](file:///home/firstmate/GitHub/swifty-proteins/app/src/main/java/com/example/swiftyproteins/ui/protein/ProteinListActivity.kt) | Kotlin Source | Streams lightweight ligand IDs from `assets/ligands.txt` via `BufferedReader` and triggers CIF loading only on item selection. |
-| [`ProteinAdapter.kt`](file:///home/firstmate/GitHub/swifty-proteins/app/src/main/java/com/example/swiftyproteins/ui/protein/ProteinAdapter.kt) | Kotlin Source | Recycles `ProteinViewHolder` instances and binds row state (`tvProteinId`, `tvCachedBadge`, `btnFavorite`) only for visible viewport items. |
-| [`activity_protein_list.xml`](file:///home/firstmate/GitHub/swifty-proteins/app/src/main/res/layout/activity_protein_list.xml) | XML Layout | Declares the scrollable `RecyclerView` (`rvProteins`) hosting the ligand catalog. |
-| [`ligands.txt`](file:///home/firstmate/GitHub/swifty-proteins/app/src/main/assets/ligands.txt) | Asset File | Bundled catalog of candidate ligand identifiers loaded lazily into the adapter. |
+| [`ProteinListActivity.kt`](../../app/src/main/java/com/example/swiftyproteins/ui/protein/ProteinListActivity.kt) | Kotlin Source | Streams lightweight ligand IDs from `assets/ligands.txt` via `BufferedReader` and triggers CIF loading only on item selection. |
+| [`ProteinAdapter.kt`](../../app/src/main/java/com/example/swiftyproteins/ui/protein/ProteinAdapter.kt) | Kotlin Source | Recycles `ProteinViewHolder` instances and binds row state (`tvProteinId`, `tvCachedBadge`, `btnFavorite`) only for visible viewport items. |
+| [`activity_protein_list.xml`](../../app/src/main/res/layout/activity_protein_list.xml) | XML Layout | Declares the scrollable `RecyclerView` (`rvProteins`) hosting the ligand catalog. |
+| [`ligands.txt`](../../app/src/main/assets/ligands.txt) | Asset File | Bundled catalog of candidate ligand identifiers loaded lazily into the adapter. |
 
 ### How to test
 
@@ -62,10 +62,10 @@ All network I/O, disk cache access, and CIF parsing in `ProteinListActivity.onPr
 
 | File | Type | Description |
 |---|---|---|
-| [`ProteinListActivity.kt`](file:///home/firstmate/GitHub/swifty-proteins/app/src/main/java/com/example/swiftyproteins/ui/protein/ProteinListActivity.kt) | Kotlin Source | Coordinates `lifecycleScope.launch`, `withContext(Dispatchers.IO)` for I/O, `withContext(Dispatchers.Default)` for parsing, and `loadingOverlay` progress feedback. |
-| [`CifParser.kt`](file:///home/firstmate/GitHub/swifty-proteins/app/src/main/java/com/example/swiftyproteins/data/parser/CifParser.kt) | Kotlin Source | Parses `_chem_comp_atom` (experimental `model_Cartn_*` or ideal `pdbx_model_Cartn_*_ideal`) and `_chem_comp_bond` loops into a `Molecule` model. |
-| [`NetworkClient.kt`](file:///home/firstmate/GitHub/swifty-proteins/app/src/main/java/com/example/swiftyproteins/data/network/NetworkClient.kt) | Kotlin Source | Configures Retrofit 2 and OkHttp 3 with 15-second timeouts for asynchronous background CIF downloads. |
-| [`activity_protein_list.xml`](file:///home/firstmate/GitHub/swifty-proteins/app/src/main/res/layout/activity_protein_list.xml) | XML Layout | Defines the modal `loadingOverlay` with `progressBar` and `tvLoadingMessage` displayed during background operations. |
+| [`ProteinListActivity.kt`](../../app/src/main/java/com/example/swiftyproteins/ui/protein/ProteinListActivity.kt) | Kotlin Source | Coordinates `lifecycleScope.launch`, `withContext(Dispatchers.IO)` for I/O, `withContext(Dispatchers.Default)` for parsing, and `loadingOverlay` progress feedback. |
+| [`CifParser.kt`](../../app/src/main/java/com/example/swiftyproteins/data/parser/CifParser.kt) | Kotlin Source | Parses `_chem_comp_atom` (experimental `model_Cartn_*` or ideal `pdbx_model_Cartn_*_ideal`) and `_chem_comp_bond` loops into a `Molecule` model. |
+| [`NetworkClient.kt`](../../app/src/main/java/com/example/swiftyproteins/data/network/NetworkClient.kt) | Kotlin Source | Configures Retrofit 2 and OkHttp 3 with 15-second timeouts for asynchronous background CIF downloads. |
+| [`activity_protein_list.xml`](../../app/src/main/res/layout/activity_protein_list.xml) | XML Layout | Defines the modal `loadingOverlay` with `progressBar` and `tvLoadingMessage` displayed during background operations. |
 
 ### How to test
 
@@ -80,10 +80,10 @@ To handle complex ligands without heap churn or serialization overhead, the appl
 
 | File | Type | Description |
 |---|---|---|
-| [`SphereMesh.kt`](file:///home/firstmate/GitHub/swifty-proteins/app/src/main/java/com/example/swiftyproteins/ui/viewer/gl/SphereMesh.kt) | Kotlin Source | Allocates off-heap direct native `FloatBuffer` and `ShortBuffer` instances for unit sphere vertices, normals, and triangle indices. |
-| [`CylinderMesh.kt`](file:///home/firstmate/GitHub/swifty-proteins/app/src/main/java/com/example/swiftyproteins/ui/viewer/gl/CylinderMesh.kt) | Kotlin Source | Allocates off-heap direct native `FloatBuffer` and `ShortBuffer` instances for unit cylinder bond geometry. |
-| [`ProteinRenderer.kt`](file:///home/firstmate/GitHub/swifty-proteins/app/src/main/java/com/example/swiftyproteins/ui/viewer/gl/ProteinRenderer.kt) | Kotlin Source | Reuses pre-allocated matrix arrays and single `SphereMesh`/`CylinderMesh` instances across all atoms and bonds in `onDrawFrame()`. |
-| [`MoleculeHolder.kt`](file:///home/firstmate/GitHub/swifty-proteins/app/src/main/java/com/example/swiftyproteins/data/model/MoleculeHolder.kt) | Kotlin Source | In-memory singleton passing the active `Molecule` between activities with zero Binder serialization overhead. |
+| [`SphereMesh.kt`](../../app/src/main/java/com/example/swiftyproteins/ui/viewer/gl/SphereMesh.kt) | Kotlin Source | Allocates off-heap direct native `FloatBuffer` and `ShortBuffer` instances for unit sphere vertices, normals, and triangle indices. |
+| [`CylinderMesh.kt`](../../app/src/main/java/com/example/swiftyproteins/ui/viewer/gl/CylinderMesh.kt) | Kotlin Source | Allocates off-heap direct native `FloatBuffer` and `ShortBuffer` instances for unit cylinder bond geometry. |
+| [`ProteinRenderer.kt`](../../app/src/main/java/com/example/swiftyproteins/ui/viewer/gl/ProteinRenderer.kt) | Kotlin Source | Reuses pre-allocated matrix arrays and single `SphereMesh`/`CylinderMesh` instances across all atoms and bonds in `onDrawFrame()`. |
+| [`MoleculeHolder.kt`](../../app/src/main/java/com/example/swiftyproteins/data/model/MoleculeHolder.kt) | Kotlin Source | In-memory singleton passing the active `Molecule` between activities with zero Binder serialization overhead. |
 
 ### How to test
 
@@ -92,17 +92,17 @@ To handle complex ligands without heap churn or serialization overhead, the appl
 
 ## 60 FPS Guarantee
 
-`ProteinSurfaceView` drives the OpenGL ES 2.0 rendering thread in continuous VSync-synchronized mode (`renderMode = GLSurfaceView.RENDERMODE_CONTINUOUSLY`), ensuring frame updates lock to the display refresh rate during 3D interaction while `ProteinRenderer` enforces a nanosecond frame-interval cap at `120 FPS` (`MIN_FRAME_INTERVAL_NS = 1_000_000_000L / 120`) and samples instantaneous frame-to-frame delta times (`1_000_000_000L / frameDeltaNs`) every `250 ms` (`onFpsUpdateListener`) displayed directly in the top app bar subtitle (`tvMoleculeStats`, e.g., `"43 Atoms • 44 Bonds • 60 FPS"`). Inside `ProteinRenderer`, GPU rendering throughput is optimized by enabling hardware backface culling (`GLES20.glEnable(GLES20.GL_CULL_FACE)` with `GLES20.GL_BACK`, discarding back-facing triangles on every sphere and cylinder before fragment shading), hardware depth testing (`GLES20.glEnable(GLES20.GL_DEPTH_TEST)` with `GLES20.GL_LEQUAL`), indexed triangle drawing (`GLES20.glDrawElements`), and O(1) hash-map atom lookups (`atomMap`) when constructing bond transforms.
+`ProteinSurfaceView` drives the OpenGL ES 2.0 rendering thread in continuous mode (`renderMode = GLSurfaceView.RENDERMODE_CONTINUOUSLY`) with unthrottled swap interval (`EGL14.eglSwapInterval(..., 0)`), while `ProteinRenderer` enforces a nanosecond frame-interval cap at `120 FPS` (`MIN_FRAME_INTERVAL_NS = 1_000_000_000L / 120`) and samples effective render frame times (`1_000_000_000L / (MIN_FRAME_INTERVAL_NS + renderDurationNs)`) every `250 ms` (`onFpsUpdateListener`) displayed directly in the top app bar subtitle (`tvMoleculeStats`, e.g., `"43 Atoms • 44 Bonds • 119 FPS"`). Inside `ProteinRenderer`, GPU rendering throughput is optimized by enabling hardware backface culling (`GLES20.glEnable(GLES20.GL_CULL_FACE)` with `GLES20.GL_BACK`, discarding back-facing triangles on every sphere and cylinder before fragment shading), hardware depth testing (`GLES20.glEnable(GLES20.GL_DEPTH_TEST)` with `GLES20.GL_LEQUAL`), indexed triangle drawing (`GLES20.glDrawElements`), and O(1) hash-map atom lookups (`atomMap`) when constructing bond transforms.
 
 ### Relevant Files in the Codebase
 
 | File | Type | Description |
 |---|---|---|
-| [`ProteinRenderer.kt`](file:///home/firstmate/GitHub/swifty-proteins/app/src/main/java/com/example/swiftyproteins/ui/viewer/gl/ProteinRenderer.kt) | Kotlin Source | Configures `GL_CULL_FACE`, `GL_DEPTH_TEST`, 120 FPS frame pacing, instantaneous frame-delta FPS measurement (`onFpsUpdateListener`), and `atomMap` O(1) bond endpoint lookup. |
-| [`ProteinViewerActivity.kt`](file:///home/firstmate/GitHub/swifty-proteins/app/src/main/java/com/example/swiftyproteins/ui/viewer/ProteinViewerActivity.kt) | Kotlin Source | Subscribes to `renderer.onFpsUpdateListener` and updates the live `"• {fps} FPS"` readout in `tvMoleculeStats`. |
-| [`ProteinSurfaceView.kt`](file:///home/firstmate/GitHub/swifty-proteins/app/src/main/java/com/example/swiftyproteins/ui/viewer/gl/ProteinSurfaceView.kt) | Kotlin Source | Initializes the OpenGL ES 2.0 context with `RENDERMODE_CONTINUOUSLY` and processes touch gestures with minimal latency. |
-| [`SphereMesh.kt`](file:///home/firstmate/GitHub/swifty-proteins/app/src/main/java/com/example/swiftyproteins/ui/viewer/gl/SphereMesh.kt) | Kotlin Source | Renders indexed triangle meshes via `GLES20.glDrawElements(GLES20.GL_TRIANGLES, ...)`. |
-| [`CylinderMesh.kt`](file:///home/firstmate/GitHub/swifty-proteins/app/src/main/java/com/example/swiftyproteins/ui/viewer/gl/CylinderMesh.kt) | Kotlin Source | Renders indexed cylinder meshes via `GLES20.glDrawElements(GLES20.GL_TRIANGLES, ...)`. |
+| [`ProteinRenderer.kt`](../../app/src/main/java/com/example/swiftyproteins/ui/viewer/gl/ProteinRenderer.kt) | Kotlin Source | Configures `GL_CULL_FACE`, `GL_DEPTH_TEST`, 120 FPS frame pacing, instantaneous frame-delta FPS measurement (`onFpsUpdateListener`), and `atomMap` O(1) bond endpoint lookup. |
+| [`ProteinViewerActivity.kt`](../../app/src/main/java/com/example/swiftyproteins/ui/viewer/ProteinViewerActivity.kt) | Kotlin Source | Subscribes to `renderer.onFpsUpdateListener` and updates the live `"• {fps} FPS"` readout in `tvMoleculeStats`. |
+| [`ProteinSurfaceView.kt`](../../app/src/main/java/com/example/swiftyproteins/ui/viewer/gl/ProteinSurfaceView.kt) | Kotlin Source | Initializes the OpenGL ES 2.0 context with `RENDERMODE_CONTINUOUSLY` and processes touch gestures with minimal latency. |
+| [`SphereMesh.kt`](../../app/src/main/java/com/example/swiftyproteins/ui/viewer/gl/SphereMesh.kt) | Kotlin Source | Renders indexed triangle meshes via `GLES20.glDrawElements(GLES20.GL_TRIANGLES, ...)`. |
+| [`CylinderMesh.kt`](../../app/src/main/java/com/example/swiftyproteins/ui/viewer/gl/CylinderMesh.kt) | Kotlin Source | Renders indexed cylinder meshes via `GLES20.glDrawElements(GLES20.GL_TRIANGLES, ...)`. |
 
 ### How to test
 

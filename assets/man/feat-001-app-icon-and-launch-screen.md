@@ -18,24 +18,24 @@ The application provides a customised, high-resolution adaptive launcher icon ac
 ### Launch Screen (Splash Screen)
 - **Dedicated Splash Activity**: Handled by `SplashActivity` configured with the custom theme `@style/Theme.SwiftyProteins.Splash`.
 - **Minimum 1-Second Display**: Explicitly enforces the strict 42 evaluation rule that the launch screen must remain visible for **at least 1 second** (`1100 ms` via main thread `Handler` delay) even on ultra-fast modern processors.
-- **Visual Presentation**: High-resolution molecular brand logo (`logo_splash.png`) centered over a deep gradient background (`bg_splash_gradient.xml`).
+- **Visual Presentation**: High-resolution molecular brand logo (`logo_splash_transparent.png`) centered over a deep gradient background (`bg_splash_gradient.xml`).
 - **Smooth Transition**: Employs a polished cross-fade animation transition (`overridePendingTransition(fade_in, fade_out)`) when navigating to `LoginActivity`.
 
 ### Autolayout & Screen Adaptability
-- Root layout configured using Android's `ConstraintLayout`.
+- Root splash layout uses a centered `RelativeLayout`, while main interactive application screens use responsive `ConstraintLayout` and `ScrollView` hierarchies.
 - UI components maintain proper centering, aspect ratios, and padding across varied screen aspect ratios (16:9, 18:9, 19.5:9, 21:9), tablets, and device orientations (portrait and landscape).
 
 ## Relevant Files in the Codebase
 
 | File | Type | Description |
 |---|---|---|
-| [`SplashActivity.kt`](file:///home/firstmate/GitHub/swifty-proteins/app/src/main/java/com/example/swiftyproteins/ui/splash/SplashActivity.kt) | Kotlin Source | Cold-start entry point managing the 1100ms display delay and fade transition to LoginActivity. |
-| [`activity_splash.xml`](file:///home/firstmate/GitHub/swifty-proteins/app/src/main/res/layout/activity_splash.xml) | XML Layout | ConstraintLayout defining the centered brand logo and layout hierarchy. |
-| [`AndroidManifest.xml`](file:///home/firstmate/GitHub/swifty-proteins/app/src/main/AndroidManifest.xml) | Manifest | Declares `SplashActivity` with `MAIN` and `LAUNCHER` intent filters and application icon references. |
-| [`themes.xml`](file:///home/firstmate/GitHub/swifty-proteins/app/src/main/res/values/themes.xml) | Styles | Defines `Theme.SwiftyProteins.Splash` with full-screen flags and window background. |
-| [`bg_splash_gradient.xml`](file:///home/firstmate/GitHub/swifty-proteins/app/src/main/res/drawable/bg_splash_gradient.xml) | Drawable | Linear dark gradient background resource. |
-| [`ic_launcher.xml`](file:///home/firstmate/GitHub/swifty-proteins/app/src/main/res/mipmap-anydpi/ic_launcher.xml) | Mipmap | Vector adaptive icon definition combining foreground and background. |
-| [`ic_launcher_round.xml`](file:///home/firstmate/GitHub/swifty-proteins/app/src/main/res/mipmap-anydpi/ic_launcher_round.xml) | Mipmap | Circular adaptive launcher icon definition for round icon launchers. |
+| [`SplashActivity.kt`](../../app/src/main/java/com/example/swiftyproteins/ui/splash/SplashActivity.kt) | Kotlin Source | Cold-start entry point managing the 1100ms display delay and fade transition to LoginActivity. |
+| [`activity_splash.xml`](../../app/src/main/res/layout/activity_splash.xml) | XML Layout | RelativeLayout defining the centered brand logo and gradient background. |
+| [`AndroidManifest.xml`](../../app/src/main/AndroidManifest.xml) | Manifest | Declares `SplashActivity` with `MAIN` and `LAUNCHER` intent filters and application icon references. |
+| [`themes.xml`](../../app/src/main/res/values/themes.xml) | Styles | Defines `Theme.SwiftyProteins.Splash` with full-screen flags and window background. |
+| [`bg_splash_gradient.xml`](../../app/src/main/res/drawable/bg_splash_gradient.xml) | Drawable | Linear dark gradient background resource. |
+| [`ic_launcher.xml`](../../app/src/main/res/mipmap-anydpi/ic_launcher.xml) | Mipmap | Vector adaptive icon definition combining foreground and background. |
+| [`ic_launcher_round.xml`](../../app/src/main/res/mipmap-anydpi/ic_launcher_round.xml) | Mipmap | Circular adaptive launcher icon definition for round icon launchers. |
 
 ## Testing and Verification
 

@@ -4,7 +4,7 @@ The **Enhanced Molecular Interactions** features add advanced interactions for e
 
 ## Features List
 
-Status | Feature | Decription
+Status | Feature | Description
 :--- | :--- | :---
 ⚪ | **Atom Highlighting** | When hovering over or selecting an atom, highlight all atoms of the same element type.
 ⚫ | **Bond Information** | Display bond types (single, double, triple) and bond lengths when tapping on bonds.
@@ -24,11 +24,11 @@ When a user taps an atom in the 3D viewport, `ProteinSurfaceView` dispatches the
 
 | File | Type | Description |
 |---|---|---|
-| [`ProteinRenderer.kt`](file:///home/firstmate/GitHub/swifty-proteins/app/src/main/java/com/example/swiftyproteins/ui/viewer/gl/ProteinRenderer.kt) | Kotlin Source | Manages `selectedAtom` and `highlightElement` state and renders `drawAtomHighlight()` (cyan selection halo) and `drawElementHighlight()` (gold element-wide co-highlighting). |
-| [`RaycastPicker.kt`](file:///home/firstmate/GitHub/swifty-proteins/app/src/main/java/com/example/swiftyproteins/ui/viewer/gl/RaycastPicker.kt) | Kotlin Source | Unprojects 2D screen touch coordinates into a 3D world ray and performs ray-sphere intersection testing to identify the tapped atom. |
-| [`ProteinSurfaceView.kt`](file:///home/firstmate/GitHub/swifty-proteins/app/src/main/java/com/example/swiftyproteins/ui/viewer/gl/ProteinSurfaceView.kt) | Kotlin Source | Detects single-tap gestures via `GestureDetector.SimpleOnGestureListener`, invokes `renderer.pickAtom()`, and triggers `onAtomSelectedListener`. |
-| [`ProteinViewerActivity.kt`](file:///home/firstmate/GitHub/swifty-proteins/app/src/main/java/com/example/swiftyproteins/ui/viewer/ProteinViewerActivity.kt) | Kotlin Source | Binds `onAtomSelectedListener` to set `renderer.highlightElement = atom.symbol` and populates/hides the `cardAtomInfo` tooltip card. |
-| [`Atom.kt`](file:///home/firstmate/GitHub/swifty-proteins/app/src/main/java/com/example/swiftyproteins/data/model/Atom.kt) | Kotlin Source | Defines elemental symbols, full element names, CPK colors (`colorHex` / `colorRgba`), and `ballRadius` / `vdwRadius` dimensions. |
+| [`ProteinRenderer.kt`](../../app/src/main/java/com/example/swiftyproteins/ui/viewer/gl/ProteinRenderer.kt) | Kotlin Source | Manages `selectedAtom` and `highlightElement` state and renders `drawAtomHighlight()` (cyan selection halo) and `drawElementHighlight()` (gold element-wide co-highlighting). |
+| [`RaycastPicker.kt`](../../app/src/main/java/com/example/swiftyproteins/ui/viewer/gl/RaycastPicker.kt) | Kotlin Source | Unprojects 2D screen touch coordinates into a 3D world ray and performs ray-sphere intersection testing to identify the tapped atom. |
+| [`ProteinSurfaceView.kt`](../../app/src/main/java/com/example/swiftyproteins/ui/viewer/gl/ProteinSurfaceView.kt) | Kotlin Source | Detects single-tap gestures via `GestureDetector.SimpleOnGestureListener`, invokes `renderer.pickAtom()`, and triggers `onAtomSelectedListener`. |
+| [`ProteinViewerActivity.kt`](../../app/src/main/java/com/example/swiftyproteins/ui/viewer/ProteinViewerActivity.kt) | Kotlin Source | Binds `onAtomSelectedListener` to set `renderer.highlightElement = atom.symbol` and populates/hides the `cardAtomInfo` tooltip card. |
+| [`Atom.kt`](../../app/src/main/java/com/example/swiftyproteins/data/model/Atom.kt) | Kotlin Source | Defines elemental symbols, full element names, CPK colors (`colorHex` / `colorRgba`), and `ballRadius` / `vdwRadius` dimensions. |
 
 ### How to test
 
@@ -45,10 +45,10 @@ When a user taps an atom in the 3D viewport, `ProteinSurfaceView` dispatches the
 
 | File | Type | Description |
 |---|---|---|
-| [`AtomLabelOverlay.kt`](file:///home/firstmate/GitHub/swifty-proteins/app/src/main/java/com/example/swiftyproteins/ui/viewer/AtomLabelOverlay.kt) | Kotlin Source | Custom transparent `View` computing 3D-to-2D MVP coordinate projections, filtering out hydrogens, and drawing CPK-tinted rounded symbol pills. |
-| [`ProteinViewerActivity.kt`](file:///home/firstmate/GitHub/swifty-proteins/app/src/main/java/com/example/swiftyproteins/ui/viewer/ProteinViewerActivity.kt) | Kotlin Source | Wires `atomLabelOverlay` to `renderer`, `centerOffset`, and `molecule.atoms`, and handles the `btnToggleLabels` click listener. |
-| [`activity_protein_viewer.xml`](file:///home/firstmate/GitHub/swifty-proteins/app/src/main/res/layout/activity_protein_viewer.xml) | XML Layout | Positions `AtomLabelOverlay` full-screen over `ProteinSurfaceView` and defines `btnToggleLabels` in the bottom control bar. |
-| [`ProteinRenderer.kt`](file:///home/firstmate/GitHub/swifty-proteins/app/src/main/java/com/example/swiftyproteins/ui/viewer/gl/ProteinRenderer.kt) | Kotlin Source | Exposes live `projectionMatrix`, `viewMatrix`, `modelMatrix`, and `centerOffset` arrays consumed by `AtomLabelOverlay`. |
+| [`AtomLabelOverlay.kt`](../../app/src/main/java/com/example/swiftyproteins/ui/viewer/AtomLabelOverlay.kt) | Kotlin Source | Custom transparent `View` computing 3D-to-2D MVP coordinate projections, filtering out hydrogens, and drawing CPK-tinted rounded symbol pills. |
+| [`ProteinViewerActivity.kt`](../../app/src/main/java/com/example/swiftyproteins/ui/viewer/ProteinViewerActivity.kt) | Kotlin Source | Wires `atomLabelOverlay` to `renderer`, `centerOffset`, and `molecule.atoms`, and handles the `btnToggleLabels` click listener. |
+| [`activity_protein_viewer.xml`](../../app/src/main/res/layout/activity_protein_viewer.xml) | XML Layout | Positions `AtomLabelOverlay` full-screen over `ProteinSurfaceView` and defines `btnToggleLabels` in the bottom control bar. |
+| [`ProteinRenderer.kt`](../../app/src/main/java/com/example/swiftyproteins/ui/viewer/gl/ProteinRenderer.kt) | Kotlin Source | Exposes live `projectionMatrix`, `viewMatrix`, `modelMatrix`, and `centerOffset` arrays consumed by `AtomLabelOverlay`. |
 
 ### How to test
 

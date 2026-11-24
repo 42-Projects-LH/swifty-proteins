@@ -4,7 +4,7 @@ The **Advanced User Interface** bonus features enhance the user experience and v
 
 ## Features List
 
-Status | Feature | Decription
+Status | Feature | Description
 :--- | :--- | :---
 ⚪ | **Custom Table/List Cells** | Design beautiful custom cells for the ligand list with icons, previews, or additional information.
 ⚪ | **Smooth Animations** | Add polished transitions between views, animated loading states, and micro-interactions.
@@ -24,12 +24,12 @@ The ligand catalog in `ProteinListActivity` renders each candidate entry using a
 
 | File | Type | Description |
 |---|---|---|
-| [`item_protein.xml`](file:///home/firstmate/GitHub/swifty-proteins/app/src/main/res/layout/item_protein.xml) | XML Layout | Custom `MaterialCardView` cell defining the molecular icon avatar, ligand ID, offline cache badge, and favorite star button. |
-| [`ProteinAdapter.kt`](file:///home/firstmate/GitHub/swifty-proteins/app/src/main/java/com/example/swiftyproteins/ui/protein/ProteinAdapter.kt) | Kotlin Source | `RecyclerView.Adapter` binding ligand IDs, querying `CifCache.has()` for badge visibility, and handling `FavoritesManager.toggle()` clicks. |
-| [`bg_badge_cached.xml`](file:///home/firstmate/GitHub/swifty-proteins/app/src/main/res/drawable/bg_badge_cached.xml) | XML Drawable | Rounded rectangle shape (`4dp` radius) with translucent cyan background and stroke for the `"offline"` badge. |
-| [`bg_circle.xml`](file:///home/firstmate/GitHub/swifty-proteins/app/src/main/res/drawable/bg_circle.xml) | XML Drawable | Circular oval shape backing the molecular ring icon container in each list card. |
-| [`ic_star_filled.xml`](file:///home/firstmate/GitHub/swifty-proteins/app/src/main/res/drawable/ic_star_filled.xml) | XML Drawable | Gold (`#FFC832`) filled star vector icon indicating a bookmarked ligand. |
-| [`ic_star_outline.xml`](file:///home/firstmate/GitHub/swifty-proteins/app/src/main/res/drawable/ic_star_outline.xml) | XML Drawable | Theme-aware (`?attr/colorOnSurface`) outlined star vector icon for unbookmarked ligands. |
+| [`item_protein.xml`](../../app/src/main/res/layout/item_protein.xml) | XML Layout | Custom `MaterialCardView` cell defining the molecular icon avatar, ligand ID, offline cache badge, and favorite star button. |
+| [`ProteinAdapter.kt`](../../app/src/main/java/com/example/swiftyproteins/ui/protein/ProteinAdapter.kt) | Kotlin Source | `RecyclerView.Adapter` binding ligand IDs, querying `CifCache.has()` for badge visibility, and handling `FavoritesManager.toggle()` clicks. |
+| [`bg_badge_cached.xml`](../../app/src/main/res/drawable/bg_badge_cached.xml) | XML Drawable | Rounded rectangle shape (`4dp` radius) with translucent cyan background and stroke for the `"offline"` badge. |
+| [`bg_circle.xml`](../../app/src/main/res/drawable/bg_circle.xml) | XML Drawable | Circular oval shape backing the molecular ring icon container in each list card. |
+| [`ic_star_filled.xml`](../../app/src/main/res/drawable/ic_star_filled.xml) | XML Drawable | Gold (`#FFC832`) filled star vector icon indicating a bookmarked ligand. |
+| [`ic_star_outline.xml`](../../app/src/main/res/drawable/ic_star_outline.xml) | XML Drawable | Theme-aware (`?attr/colorOnSurface`) outlined star vector icon for unbookmarked ligands. |
 
 ### How to test
 
@@ -40,17 +40,17 @@ The ligand catalog in `ProteinListActivity` renders each candidate entry using a
 
 ## Smooth Animations
 
-View navigation, asynchronous data loading, and interactive controls incorporate smooth visual feedback across the application lifecycle. `SplashActivity` executes a cross-fade transition (`overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out)`) into `LoginActivity` after the `1100 ms` launch duration, while `ProteinListActivity` presents a modal loading overlay (`loadingOverlay` over `#88000000` dim scrim) featuring an indeterminate `56dp` spinning `ProgressBar` and context-aware status messages (`"Loading {ID}..."` for disk cache hits vs. `"Fetching {ID} from RCSB..."` for network requests). Within the 3D viewer and list cards, micro-interactions provide immediate tactile and visual response, including borderless ripple feedback (`?attr/selectableItemBackgroundBorderless`) on action buttons, opacity transitions (`alpha` toggling between `1.0f` and `0.45f`) on `btnToggleLabels`, dynamic floating tooltip card visibility (`cardAtomInfo`) with CPK color tinting (`viewAtomColor`), and continuous 60 FPS VSync-locked OpenGL rendering (`RENDERMODE_CONTINUOUSLY`).
+View navigation, asynchronous data loading, and interactive controls incorporate smooth visual feedback across the application lifecycle. `SplashActivity` executes a cross-fade transition (`overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out)`) into `LoginActivity` after the `1100 ms` launch duration, while `ProteinListActivity` presents a modal loading overlay (`loadingOverlay` over `#88000000` dim scrim) featuring an indeterminate `56dp` spinning `ProgressBar` and context-aware status messages (`"Loading {ID}..."` for disk cache hits vs. `"Fetching {ID} from RCSB..."` for network requests). Within the 3D viewer and list cards, micro-interactions provide immediate tactile and visual response, including borderless ripple feedback (`?attr/selectableItemBackgroundBorderless`) on action buttons, opacity transitions (`alpha` toggling between `1.0f` and `0.45f`) on `btnToggleLabels`, dynamic floating tooltip card visibility (`cardAtomInfo`) with CPK color tinting (`viewAtomColor`), and continuous 60–120 FPS OpenGL rendering (`RENDERMODE_CONTINUOUSLY`).
 
 ### Relevant Files in the Codebase
 
 | File | Type | Description |
 |---|---|---|
-| [`SplashActivity.kt`](file:///home/firstmate/GitHub/swifty-proteins/app/src/main/java/com/example/swiftyproteins/ui/splash/SplashActivity.kt) | Kotlin Source | Triggers the cross-fade transition (`android.R.anim.fade_in`, `android.R.anim.fade_out`) when navigating from the splash screen to `LoginActivity`. |
-| [`ProteinListActivity.kt`](file:///home/firstmate/GitHub/swifty-proteins/app/src/main/java/com/example/swiftyproteins/ui/protein/ProteinListActivity.kt) | Kotlin Source | Controls the animated `loadingOverlay` visibility and updates `tvLoadingMessage` during coroutine-based CIF fetching and parsing. |
-| [`activity_protein_list.xml`](file:///home/firstmate/GitHub/swifty-proteins/app/src/main/res/layout/activity_protein_list.xml) | XML Layout | Declares the modal `loadingOverlay`, indeterminate `ProgressBar` spinner, and borderless ripple action buttons. |
-| [`ProteinViewerActivity.kt`](file:///home/firstmate/GitHub/swifty-proteins/app/src/main/java/com/example/swiftyproteins/ui/viewer/ProteinViewerActivity.kt) | Kotlin Source | Manages micro-interactions for atom selection tooltips (`showAtomTooltip`/`hideAtomTooltip`), label button alpha states, and in-place model cycling. |
-| [`ProteinSurfaceView.kt`](file:///home/firstmate/GitHub/swifty-proteins/app/src/main/java/com/example/swiftyproteins/ui/viewer/gl/ProteinSurfaceView.kt) | Kotlin Source | Configures `RENDERMODE_CONTINUOUSLY` and smooth gesture handlers for 1-finger orbit rotation, 2-finger pinch zoom, and 2-finger panning. |
+| [`SplashActivity.kt`](../../app/src/main/java/com/example/swiftyproteins/ui/splash/SplashActivity.kt) | Kotlin Source | Triggers the cross-fade transition (`android.R.anim.fade_in`, `android.R.anim.fade_out`) when navigating from the splash screen to `LoginActivity`. |
+| [`ProteinListActivity.kt`](../../app/src/main/java/com/example/swiftyproteins/ui/protein/ProteinListActivity.kt) | Kotlin Source | Controls the animated `loadingOverlay` visibility and updates `tvLoadingMessage` during coroutine-based CIF fetching and parsing. |
+| [`activity_protein_list.xml`](../../app/src/main/res/layout/activity_protein_list.xml) | XML Layout | Declares the modal `loadingOverlay`, indeterminate `ProgressBar` spinner, and borderless ripple action buttons. |
+| [`ProteinViewerActivity.kt`](../../app/src/main/java/com/example/swiftyproteins/ui/viewer/ProteinViewerActivity.kt) | Kotlin Source | Manages micro-interactions for atom selection tooltips (`showAtomTooltip`/`hideAtomTooltip`), label button alpha states, and in-place model cycling. |
+| [`ProteinSurfaceView.kt`](../../app/src/main/java/com/example/swiftyproteins/ui/viewer/gl/ProteinSurfaceView.kt) | Kotlin Source | Configures `RENDERMODE_CONTINUOUSLY` and smooth gesture handlers for 1-finger orbit rotation, 2-finger pinch zoom, and 2-finger panning. |
 
 ### How to test
 
@@ -66,11 +66,11 @@ Swifty Proteins implements a Day/Night theme system built on Material 3 (`Theme.
 
 | File | Type | Description |
 |---|---|---|
-| [`colors.xml`](file:///home/firstmate/GitHub/swifty-proteins/app/src/main/res/values/colors.xml) | XML Resource | Defines the brand accents (`cyan_accent`, `pink_accent`, `star_gold`) and paired light/dark surface and typography palettes. |
-| [`values/themes.xml`](file:///home/firstmate/GitHub/swifty-proteins/app/src/main/res/values/themes.xml) | XML Resource | Configures the light-mode `Base.Theme.SwiftyProteins` surface mappings and translucent splash theme. |
-| [`values-night/themes.xml`](file:///home/firstmate/GitHub/swifty-proteins/app/src/main/res/values-night/themes.xml) | XML Resource | Overrides `android:windowBackground`, `colorSurface`, and `colorOnSurface` with dark palette tokens when night mode is active. |
-| [`activity_protein_viewer.xml`](file:///home/firstmate/GitHub/swifty-proteins/app/src/main/res/layout/activity_protein_viewer.xml) | XML Layout | Applies `#10141D` background and translucent dark chrome (`#CC161B26`, `#E6181D29`) around the OpenGL surface. |
-| [`ProteinRenderer.kt`](file:///home/firstmate/GitHub/swifty-proteins/app/src/main/java/com/example/swiftyproteins/ui/viewer/gl/ProteinRenderer.kt) | Kotlin Source | Sets the `#10141D` OpenGL clear color, compiles the Blinn-Phong lighting shaders, and renders additive cyan/gold selection halos. |
+| [`colors.xml`](../../app/src/main/res/values/colors.xml) | XML Resource | Defines the brand accents (`cyan_accent`, `pink_accent`, `star_gold`) and paired light/dark surface and typography palettes. |
+| [`values/themes.xml`](../../app/src/main/res/values/themes.xml) | XML Resource | Configures the light-mode `Base.Theme.SwiftyProteins` surface mappings and translucent splash theme. |
+| [`values-night/themes.xml`](../../app/src/main/res/values-night/themes.xml) | XML Resource | Overrides `android:windowBackground`, `colorSurface`, and `colorOnSurface` with dark palette tokens when night mode is active. |
+| [`activity_protein_viewer.xml`](../../app/src/main/res/layout/activity_protein_viewer.xml) | XML Layout | Applies `#10141D` background and translucent dark chrome (`#CC161B26`, `#E6181D29`) around the OpenGL surface. |
+| [`ProteinRenderer.kt`](../../app/src/main/java/com/example/swiftyproteins/ui/viewer/gl/ProteinRenderer.kt) | Kotlin Source | Sets the `#10141D` OpenGL clear color, compiles the Blinn-Phong lighting shaders, and renders additive cyan/gold selection halos. |
 
 ### How to test
 

@@ -55,9 +55,9 @@ The bonus section extends the application with advanced biochemical visualizatio
 * **Key Files**: [`ProteinRenderer.kt`](../app/src/main/java/com/example/swiftyproteins/ui/viewer/gl/ProteinRenderer.kt), [`ProteinViewerActivity.kt`](../app/src/main/java/com/example/swiftyproteins/ui/viewer/ProteinViewerActivity.kt), [`Atom.kt`](../app/src/main/java/com/example/swiftyproteins/data/model/Atom.kt).
 
 ### [📂 Advanced User Interface](man/bonus-002-advanced-user-interface.md)
-* **Custom Card Cells**: High-density list cards with elemental letter avatars, cached availability pills, and bookmarking stars.
+* **Custom Card Cells**: High-density list cards with molecular ring (`⬡`) avatars, cached availability (`offline`) pills, and bookmarking stars.
 * **Smooth Navigation Animations**: Custom fade transitions across all activities and loading states.
-* **Modern Dark Theme**: OLED-friendly palette (`#10141D` background, `#1A2232` card surfaces, `#02F0FF` cyan accents).
+* **Modern Dark Theme**: OLED-friendly palette (`#10141D` background, `#161B26` card surfaces, `#01EFFE` cyan accents).
 * **Contextual Controls**: Camera reset, label overlays, model switching, and favorites filtering integrated into clean toolbars.
 * **Key Files**: [`item_protein.xml`](../app/src/main/res/layout/item_protein.xml), [`colors.xml`](../app/src/main/res/values/colors.xml), [`themes.xml`](../app/src/main/res/values/themes.xml).
 
@@ -72,7 +72,7 @@ The bonus section extends the application with advanced biochemical visualizatio
 * **Local Disk Caching**: Downloaded CIF files are stored in `filesDir/cif_cache/`, providing instant offline reloading and saving bandwidth.
 * **Multi-Thread Coroutine Architecture**: Network and disk I/O on `Dispatchers.IO`, CPU-intensive CIF tokenization on `Dispatchers.Default`, UI rendering on `Dispatchers.Main`.
 * **Zero-Allocation Render Loop**: Pre-allocated FloatBuffers and static transformation matrices avoid JVM garbage collection pauses.
-* **60+ FPS Guarantee**: VSync synchronization, backface culling (`GL_CULL_FACE`), and hardware depth testing (`GL_DEPTH_TEST`).
+* **60–120 FPS Guarantee**: Unthrottled 120 FPS frame pacing, backface culling (`GL_CULL_FACE`), and hardware depth testing (`GL_DEPTH_TEST`).
 * **Key Files**: [`CifCache.kt`](../app/src/main/java/com/example/swiftyproteins/data/cache/CifCache.kt), [`CifParser.kt`](../app/src/main/java/com/example/swiftyproteins/data/parser/CifParser.kt), [`MoleculeHolder.kt`](../app/src/main/java/com/example/swiftyproteins/data/model/MoleculeHolder.kt).
 
 ### [📂 Extended Sharing and Export](man/bonus-005-extended-sharing-and-export.md)

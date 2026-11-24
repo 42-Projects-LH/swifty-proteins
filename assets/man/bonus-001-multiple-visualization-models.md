@@ -4,10 +4,10 @@ The **Multiple Visualization Models** bonus feature expands the rendering pipeli
 
 Model | Example
 :--- | :---
-**Ball & Stick** (Mandatory baseline) | ![ball&stick](/assets/imgs/caffeine-3d-model-ballnstick.png)
-**Space-Filling (CPK / Calotte Model)** | ![spacefilling](/assets/imgs/caffeine-3d-model-space-filling.png)
-**Stick (Licorice Model)** | ![stick](/assets/imgs/caffeine-3d-model-stick.png)
-**Wireframe (Line Model)** | ![wireframe](/assets/imgs/caffeine-3d-model-wireframe.png)
+**Ball & Stick** (Mandatory baseline) | ![ball&stick](../imgs/caffeine-3d-model-ballnstick.png)
+**Space-Filling (CPK / Calotte Model)** | ![spacefilling](../imgs/caffeine-3d-model-space-filling.png)
+**Stick (Licorice Model)** | ![stick](../imgs/caffeine-3d-model-stick.png)
+**Wireframe (Line Model)** | ![wireframe](../imgs/caffeine-3d-model-wireframe.png)
 
 Users can cycle dynamically between representations with a single tap of an on-screen UI control. Model transitions occur instantaneously in memory without reloading, re-parsing, or re-downloading the molecule data.
 
@@ -57,12 +57,12 @@ Users can cycle dynamically between representations with a single tap of an on-s
 
 | File | Type | Description |
 |---|---|---|
-| [`ProteinRenderer.kt`](file:///home/firstmate/GitHub/swifty-proteins/app/src/main/java/com/example/swiftyproteins/ui/viewer/gl/ProteinRenderer.kt) | Kotlin Source | Defines `RenderModel` enum and executes specialized draw routines (`drawAtoms`, `drawBonds`, `drawSmallAtomCaps`, `drawWireframe`). |
-| [`ProteinViewerActivity.kt`](file:///home/firstmate/GitHub/swifty-proteins/app/src/main/java/com/example/swiftyproteins/ui/viewer/ProteinViewerActivity.kt) | Kotlin Source | Configures the `btnToggleModel` click listener and model cycling logic. |
-| [`RaycastPicker.kt`](file:///home/firstmate/GitHub/swifty-proteins/app/src/main/java/com/example/swiftyproteins/ui/viewer/gl/RaycastPicker.kt) | Kotlin Source | Dynamically tests intersections against either `vdwRadius` (Space-Filling) or `ballRadius` (other modes). |
-| [`Atom.kt`](file:///home/firstmate/GitHub/swifty-proteins/app/src/main/java/com/example/swiftyproteins/data/model/Atom.kt) | Kotlin Source | Stores standardized Van der Waals (`vdwRadius`) and Ball (`ballRadius`) radius measurements per chemical element. |
-| [`SphereMesh.kt`](file:///home/firstmate/GitHub/swifty-proteins/app/src/main/java/com/example/swiftyproteins/ui/viewer/gl/SphereMesh.kt) | Kotlin Source | Provides tessellated sphere vertex buffers reused across Ball & Stick, Space-Filling, and joint caps. |
-| [`CylinderMesh.kt`](file:///home/firstmate/GitHub/swifty-proteins/app/src/main/java/com/example/swiftyproteins/ui/viewer/gl/CylinderMesh.kt) | Kotlin Source | Provides cylinder vertex buffers dynamically scaled for normal vs thick stick representations. |
+| [`ProteinRenderer.kt`](../../app/src/main/java/com/example/swiftyproteins/ui/viewer/gl/ProteinRenderer.kt) | Kotlin Source | Defines `RenderModel` enum and executes specialized draw routines (`drawAtoms`, `drawBonds`, `drawSmallAtomCaps`, `drawWireframe`). |
+| [`ProteinViewerActivity.kt`](../../app/src/main/java/com/example/swiftyproteins/ui/viewer/ProteinViewerActivity.kt) | Kotlin Source | Configures the `btnToggleModel` click listener and model cycling logic. |
+| [`RaycastPicker.kt`](../../app/src/main/java/com/example/swiftyproteins/ui/viewer/gl/RaycastPicker.kt) | Kotlin Source | Dynamically tests intersections against either `vdwRadius` (Space-Filling) or `ballRadius` (other modes). |
+| [`Atom.kt`](../../app/src/main/java/com/example/swiftyproteins/data/model/Atom.kt) | Kotlin Source | Stores standardized Van der Waals (`vdwRadius`) and Ball (`ballRadius`) radius measurements per chemical element. |
+| [`SphereMesh.kt`](../../app/src/main/java/com/example/swiftyproteins/ui/viewer/gl/SphereMesh.kt) | Kotlin Source | Provides tessellated sphere vertex buffers reused across Ball & Stick, Space-Filling, and joint caps. |
+| [`CylinderMesh.kt`](../../app/src/main/java/com/example/swiftyproteins/ui/viewer/gl/CylinderMesh.kt) | Kotlin Source | Provides cylinder vertex buffers dynamically scaled for normal vs thick stick representations. |
 
 ## Testing and Verification
 

@@ -4,7 +4,7 @@ The **Extended Sharing and Export** features enhance the application's sharing c
 
 ## Features List
 
-Status | Feature | Decription
+Status | Feature | Description
 :--- | :--- | :---
 ⚪ | **Custom Share Messages** | When sharing, include a custom message with the ligand name, number of atoms, and molecular formula.
 ⚫ | **Multiple Export Formats** | Allow exporting the view as different image formats (PNG, JPEG) or even as a 3D model file.
@@ -24,11 +24,11 @@ When the user taps the share action button (`btnShare`) in `ProteinViewerActivit
 
 | File | Type | Description |
 |---|---|---|
-| [`ProteinViewerActivity.kt`](file:///home/firstmate/GitHub/swifty-proteins/app/src/main/java/com/example/swiftyproteins/ui/viewer/ProteinViewerActivity.kt) | Kotlin Source | Implements `captureAndShareModel()`, `saveToPhotoAlbum()`, and `shareBitmap()`, building the formatted Hill-formula share message and launching `Intent.ACTION_SEND`. |
-| [`Molecule.kt`](file:///home/firstmate/GitHub/swifty-proteins/app/src/main/java/com/example/swiftyproteins/data/model/Molecule.kt) | Kotlin Source | Computes `molecularFormula` in Hill notation by grouping and counting elemental symbols across `atoms`. |
-| [`ProteinRenderer.kt`](file:///home/firstmate/GitHub/swifty-proteins/app/src/main/java/com/example/swiftyproteins/ui/viewer/gl/ProteinRenderer.kt) | Kotlin Source | Executes `captureAndDispatchScreenshot()` on the GL thread using `GLES20.glReadPixels()` and vertical row inversion. |
-| [`file_paths.xml`](file:///home/firstmate/GitHub/swifty-proteins/app/src/main/res/xml/file_paths.xml) | XML Resource | Declares the `cache-path` (`images/`) exposed by `androidx.core.content.FileProvider` for secure image URI sharing. |
-| [`AndroidManifest.xml`](file:///home/firstmate/GitHub/swifty-proteins/app/src/main/AndroidManifest.xml) | Manifest | Registers the `FileProvider` authority (`${applicationId}.fileprovider`) with `grantUriPermissions="true"`. |
+| [`ProteinViewerActivity.kt`](../../app/src/main/java/com/example/swiftyproteins/ui/viewer/ProteinViewerActivity.kt) | Kotlin Source | Implements `captureAndShareModel()`, `saveToPhotoAlbum()`, and `shareBitmap()`, building the formatted Hill-formula share message and launching `Intent.ACTION_SEND`. |
+| [`Molecule.kt`](../../app/src/main/java/com/example/swiftyproteins/data/model/Molecule.kt) | Kotlin Source | Computes `molecularFormula` in Hill notation by grouping and counting elemental symbols across `atoms`. |
+| [`ProteinRenderer.kt`](../../app/src/main/java/com/example/swiftyproteins/ui/viewer/gl/ProteinRenderer.kt) | Kotlin Source | Executes `captureAndDispatchScreenshot()` on the GL thread using `GLES20.glReadPixels()` and vertical row inversion. |
+| [`file_paths.xml`](../../app/src/main/res/xml/file_paths.xml) | XML Resource | Declares the `cache-path` (`images/`) exposed by `androidx.core.content.FileProvider` for secure image URI sharing. |
+| [`AndroidManifest.xml`](../../app/src/main/AndroidManifest.xml) | Manifest | Registers the `FileProvider` authority (`${applicationId}.fileprovider`) with `grantUriPermissions="true"`. |
 
 ### How to test
 
@@ -44,11 +44,11 @@ When the user taps the share action button (`btnShare`) in `ProteinViewerActivit
 
 | File | Type | Description |
 |---|---|---|
-| [`FavoritesManager.kt`](file:///home/firstmate/GitHub/swifty-proteins/app/src/main/java/com/example/swiftyproteins/data/favorites/FavoritesManager.kt) | Kotlin Source | Singleton persisting the set of favorited ligand IDs in `SharedPreferences` (`swifty_favorites`). |
-| [`ProteinAdapter.kt`](file:///home/firstmate/GitHub/swifty-proteins/app/src/main/java/com/example/swiftyproteins/ui/protein/ProteinAdapter.kt) | Kotlin Source | Binds star icon states, handles `btnFavorite` click toggles, and filters the dataset via `setShowFavoritesOnly()` and `rebuildFilter()`. |
-| [`ProteinListActivity.kt`](file:///home/firstmate/GitHub/swifty-proteins/app/src/main/java/com/example/swiftyproteins/ui/protein/ProteinListActivity.kt) | Kotlin Source | Wires the header `btnFavoritesFilter` button to toggle favorite-only filtering on the adapter. |
-| [`activity_protein_list.xml`](file:///home/firstmate/GitHub/swifty-proteins/app/src/main/res/layout/activity_protein_list.xml) | XML Layout | Places the `btnFavoritesFilter` star button alongside the `SearchView` in the catalog header. |
-| [`item_protein.xml`](file:///home/firstmate/GitHub/swifty-proteins/app/src/main/res/layout/item_protein.xml) | XML Layout | Defines the per-row `btnFavorite` star toggle button inside each ligand card. |
+| [`FavoritesManager.kt`](../../app/src/main/java/com/example/swiftyproteins/data/favorites/FavoritesManager.kt) | Kotlin Source | Singleton persisting the set of favorited ligand IDs in `SharedPreferences` (`swifty_favorites`). |
+| [`ProteinAdapter.kt`](../../app/src/main/java/com/example/swiftyproteins/ui/protein/ProteinAdapter.kt) | Kotlin Source | Binds star icon states, handles `btnFavorite` click toggles, and filters the dataset via `setShowFavoritesOnly()` and `rebuildFilter()`. |
+| [`ProteinListActivity.kt`](../../app/src/main/java/com/example/swiftyproteins/ui/protein/ProteinListActivity.kt) | Kotlin Source | Wires the header `btnFavoritesFilter` button to toggle favorite-only filtering on the adapter. |
+| [`activity_protein_list.xml`](../../app/src/main/res/layout/activity_protein_list.xml) | XML Layout | Places the `btnFavoritesFilter` star button alongside the `SearchView` in the catalog header. |
+| [`item_protein.xml`](../../app/src/main/res/layout/item_protein.xml) | XML Layout | Defines the per-row `btnFavorite` star toggle button inside each ligand card. |
 
 ### How to test
 

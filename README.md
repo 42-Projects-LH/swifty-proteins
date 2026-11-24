@@ -173,13 +173,13 @@ Detailed documentation for each feature, including implementation architecture, 
   Dynamic in-place switching between Ball & Stick, Space-Filling (empirical Van der Waals radii), Stick (Licorice), and Wireframe line primitives without reloading or re-fetching data; adaptive raycast picking.
 
 * [📂 **Advanced User Interface**](assets/man/bonus-002-advanced-user-interface.md)  
-  Custom elevated card list cells with letter avatars and cache pills; activity fade transitions; OLED-optimized dark mode color palette; contextual toolbars for camera reset, model toggle, and label overlay.
+  Custom elevated card list cells with molecular ring avatars and offline cache pills; activity fade transitions; OLED-optimized dark mode color palette; contextual toolbars for camera reset, model toggle, and label overlay.
 
 * [📂 **Enhanced Molecular Interactions**](assets/man/bonus-003-enhanced-molecular-interactions.md)  
   Dual-layer atom highlighting (cyan selection halo and gold element-wide co-highlighting); floating 3D-projected CPK atom labels overlay; automated Hill notation empirical formula computation (`Molecule.molecularFormula`); camera reset.
 
 * [📂 **Performance and Caching**](assets/man/bonus-004-performance-and-caching.md)  
-  Persistent on-disk CIF caching enabling instant offline access; lazy loading; multi-threaded coroutine parsing (`Dispatchers.IO` and `Dispatchers.Default`); zero-allocation render loop using native ByteBuffers; continuous 60+ FPS VSync synchronization.
+  Persistent on-disk CIF caching enabling instant offline access; lazy loading; multi-threaded coroutine parsing (`Dispatchers.IO` and `Dispatchers.Default`); zero-allocation render loop using native ByteBuffers; unthrottled 60–120 FPS rendering with frame pacing.
 
 * [📂 **Extended Sharing and Export**](assets/man/bonus-005-extended-sharing-and-export.md)  
   Custom formatted share messages with Hill formula and atom/bond counts; Scoped Storage `MediaStore` photo album export (`Pictures/SwiftyProteins`); Android `FileProvider` system share sheet integration; persistent favorites bookmarking system.

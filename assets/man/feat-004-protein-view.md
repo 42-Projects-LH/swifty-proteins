@@ -99,17 +99,17 @@ Atoms are shaded strictly adhering to the standard **Corey-Pauling-Koltun (CPK)*
 
 | File | Type | Description |
 |---|---|---|
-| [`ProteinViewerActivity.kt`](file:///home/firstmate/GitHub/swifty-proteins/app/src/main/java/com/example/swiftyproteins/ui/viewer/ProteinViewerActivity.kt) | Kotlin Source | Coordinates 3D viewer lifecycle, atom selection callbacks, model switcher, and screenshot export/share. |
-| [`ProteinSurfaceView.kt`](file:///home/firstmate/GitHub/swifty-proteins/app/src/main/java/com/example/swiftyproteins/ui/viewer/gl/ProteinSurfaceView.kt) | Kotlin Source | Custom GLSurfaceView handling touch events, rotation, pinch-to-zoom, and tap dispatching. |
-| [`ProteinRenderer.kt`](file:///home/firstmate/GitHub/swifty-proteins/app/src/main/java/com/example/swiftyproteins/ui/viewer/gl/ProteinRenderer.kt) | Kotlin Source | OpenGL ES 2.0 rendering engine: matrices, Phong shaders, atom spheres, bond cylinders, highlights, and glReadPixels. |
-| [`RaycastPicker.kt`](file:///home/firstmate/GitHub/swifty-proteins/app/src/main/java/com/example/swiftyproteins/ui/viewer/gl/RaycastPicker.kt) | Kotlin Source | Screen-to-world raycasting and ray-sphere intersection testing for touch selection. |
-| [`SphereMesh.kt`](file:///home/firstmate/GitHub/swifty-proteins/app/src/main/java/com/example/swiftyproteins/ui/viewer/gl/SphereMesh.kt) | Kotlin Source | Vertex and normal buffer generator for 3D UV spheres. |
-| [`CylinderMesh.kt`](file:///home/firstmate/GitHub/swifty-proteins/app/src/main/java/com/example/swiftyproteins/ui/viewer/gl/CylinderMesh.kt) | Kotlin Source | Vertex and normal buffer generator for 3D cylinders. |
-| [`ShaderHelper.kt`](file:///home/firstmate/GitHub/swifty-proteins/app/src/main/java/com/example/swiftyproteins/ui/viewer/gl/ShaderHelper.kt) | Kotlin Source | GLSL compilation and shader program linking helper. |
-| [`AtomLabelOverlay.kt`](file:///home/firstmate/GitHub/swifty-proteins/app/src/main/java/com/example/swiftyproteins/ui/viewer/AtomLabelOverlay.kt) | Kotlin Source | 2D canvas overlay projecting floating CPK elemental labels above 3D atoms. |
-| [`Atom.kt`](file:///home/firstmate/GitHub/swifty-proteins/app/src/main/java/com/example/swiftyproteins/data/model/Atom.kt) | Kotlin Source | CPK colors, ball radii, van der Waals radii, and coordinate models. |
-| [`Bond.kt`](file:///home/firstmate/GitHub/swifty-proteins/app/src/main/java/com/example/swiftyproteins/data/model/Bond.kt) | Kotlin Source | Data class representing covalent connections between atom IDs. |
-| [`activity_protein_viewer.xml`](file:///home/firstmate/GitHub/swifty-proteins/app/src/main/res/layout/activity_protein_viewer.xml) | XML Layout | Layout combining GLSurfaceView, overlay, action buttons, and atom tooltip card. |
+| [`ProteinViewerActivity.kt`](../../app/src/main/java/com/example/swiftyproteins/ui/viewer/ProteinViewerActivity.kt) | Kotlin Source | Coordinates 3D viewer lifecycle, atom selection callbacks, model switcher, and screenshot export/share. |
+| [`ProteinSurfaceView.kt`](../../app/src/main/java/com/example/swiftyproteins/ui/viewer/gl/ProteinSurfaceView.kt) | Kotlin Source | Custom GLSurfaceView handling touch events, rotation, pinch-to-zoom, and tap dispatching. |
+| [`ProteinRenderer.kt`](../../app/src/main/java/com/example/swiftyproteins/ui/viewer/gl/ProteinRenderer.kt) | Kotlin Source | OpenGL ES 2.0 rendering engine: matrices, Phong shaders, atom spheres, bond cylinders, highlights, and glReadPixels. |
+| [`RaycastPicker.kt`](../../app/src/main/java/com/example/swiftyproteins/ui/viewer/gl/RaycastPicker.kt) | Kotlin Source | Screen-to-world raycasting and ray-sphere intersection testing for touch selection. |
+| [`SphereMesh.kt`](../../app/src/main/java/com/example/swiftyproteins/ui/viewer/gl/SphereMesh.kt) | Kotlin Source | Vertex and normal buffer generator for 3D UV spheres. |
+| [`CylinderMesh.kt`](../../app/src/main/java/com/example/swiftyproteins/ui/viewer/gl/CylinderMesh.kt) | Kotlin Source | Vertex and normal buffer generator for 3D cylinders. |
+| [`ShaderHelper.kt`](../../app/src/main/java/com/example/swiftyproteins/ui/viewer/gl/ShaderHelper.kt) | Kotlin Source | GLSL compilation and shader program linking helper. |
+| [`AtomLabelOverlay.kt`](../../app/src/main/java/com/example/swiftyproteins/ui/viewer/AtomLabelOverlay.kt) | Kotlin Source | 2D canvas overlay projecting floating CPK elemental labels above 3D atoms. |
+| [`Atom.kt`](../../app/src/main/java/com/example/swiftyproteins/data/model/Atom.kt) | Kotlin Source | CPK colors, ball radii, van der Waals radii, and coordinate models. |
+| [`Bond.kt`](../../app/src/main/java/com/example/swiftyproteins/data/model/Bond.kt) | Kotlin Source | Data class representing covalent connections between atom IDs. |
+| [`activity_protein_viewer.xml`](../../app/src/main/res/layout/activity_protein_viewer.xml) | XML Layout | Layout combining GLSurfaceView, overlay, action buttons, and atom tooltip card. |
 
 ---
 

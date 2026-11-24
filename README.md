@@ -39,6 +39,9 @@ graph LR
     GL -. "screenshot" .-> Share
 ```
 
+>[!NOTE]
+>A **ligand** is a molecule or ion that binds to another molecule or atom—most commonly a central metal atom in chemistry, or a receptor protein in biology. The term comes from the Latin _ligare_, meaning "to bind". In biology, **ligands bind directly to specific pockets on proteins to turn them on, turn them off, or trigger a cellular action**. Because proteins do most of the mechanical and chemical work inside a cell, ligands act as the "keys" or signals that control when and how those proteins operate.
+
 ## Instructions
 
 ### Prerequisites

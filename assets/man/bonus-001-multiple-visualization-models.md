@@ -1,10 +1,13 @@
 # Multiple Visualization Models
 
-The **Multiple Visualization Models** bonus feature expands the rendering pipeline beyond the mandatory Ball-and-Stick model by providing four distinct molecular representations recognized in structural biology:
-1. **Ball & Stick** (Mandatory baseline)
-2. **Space-Filling (CPK / Calotte Model)**
-3. **Stick (Licorice Model)**
-4. **Wireframe (Line Model)**
+The **Multiple Visualization Models** bonus feature expands the rendering pipeline beyond the mandatory Ball-and-Stick model by providing four distinct molecular representations recognized in structural biology.
+
+Model | Example
+:--- | :---
+**Ball & Stick** (Mandatory baseline) | ![ball&stick](https://thumb.wikimedia.org/wikipedia/commons/thumb/7/77/Thc.pdb.gif/250px-Thc.pdb.gif)
+**Space-Filling (CPK / Calotte Model)** |
+**Stick (Licorice Model)** |
+**Wireframe (Line Model)** |
 
 Users can cycle dynamically between representations with a single tap of an on-screen UI control. Model transitions occur instantaneously in memory without reloading, re-parsing, or re-downloading the molecule data.
 

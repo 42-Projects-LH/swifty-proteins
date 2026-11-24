@@ -4,8 +4,8 @@ The **Multiple Visualization Models** bonus feature expands the rendering pipeli
 
 Model | Example
 :--- | :---
-**Ball & Stick** (Mandatory baseline) | ![ball&stick](https://thumb.wikimedia.org/wikipedia/commons/thumb/7/77/Thc.pdb.gif/250px-Thc.pdb.gif)
-**Space-Filling (CPK / Calotte Model)** |
+**Ball & Stick** (Mandatory baseline) | ![ball&stick](https://upload.wikimedia.org/wikipedia/commons/c/ca/Proline_model.jpg)
+**Space-Filling (CPK / Calotte Model)** | ![spacefilling](https://thumb.wikimedia.org/wikipedia/commons/thumb/7/77/Thc.pdb.gif/250px-Thc.pdb.gif)
 **Stick (Licorice Model)** |
 **Wireframe (Line Model)** |
 

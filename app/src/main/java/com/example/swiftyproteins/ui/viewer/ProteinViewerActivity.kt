@@ -46,11 +46,19 @@ class ProteinViewerActivity : AppCompatActivity() {
         }
 
         // Setup Header Information
+        val baseStatsText = "${molecule.atoms.size} Atoms • ${molecule.bonds.size} Bonds"
         binding.tvLigandName.text = molecule.name
-        binding.tvMoleculeStats.text = "${molecule.atoms.size} Atoms • ${molecule.bonds.size} Bonds"
+        binding.tvMoleculeStats.text = baseStatsText
 
         // Pass molecule structure to OpenGL renderer
         binding.glSurfaceView.renderer.setMolecule(molecule)
+
+        // Update live FPS readout in header subtitle (capped at 120 FPS)
+        binding.glSurfaceView.renderer.onFpsUpdateListener = { fps ->
+            runOnUiThread {
+                binding.tvMoleculeStats.text = "$baseStatsText • $fps FPS"
+            }
+        }
 
         // Setup Atom Selection, Tooltip and element highlight
         binding.glSurfaceView.onAtomSelectedListener = { atom ->

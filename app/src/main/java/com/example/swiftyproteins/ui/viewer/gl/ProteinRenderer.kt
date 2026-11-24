@@ -1,6 +1,7 @@
 package com.example.swiftyproteins.ui.viewer.gl
 
 import android.graphics.Bitmap
+import android.opengl.EGL14
 import android.opengl.GLES20
 import android.opengl.GLSurfaceView
 import android.opengl.Matrix
@@ -25,6 +26,12 @@ enum class RenderModel {
 }
 
 class ProteinRenderer : GLSurfaceView.Renderer {
+
+    companion object {
+        private const val MAX_FPS = 120
+        private const val MIN_FRAME_INTERVAL_NS = 1_000_000_000L / MAX_FPS
+        private const val FPS_UI_UPDATE_INTERVAL_NS = 250_000_000L
+    }
 
     // Molecule Data
     @Volatile
@@ -100,6 +107,13 @@ class ProteinRenderer : GLSurfaceView.Renderer {
     // Screenshot capture state
     @Volatile
     private var pendingScreenshotCallback: ((Bitmap) -> Unit)? = null
+
+    // FPS tracking & 120 FPS cap state
+    private var lastFrameStartNs = 0L
+    private var lastFpsUiUpdateNs = 0L
+
+    @Volatile
+    var onFpsUpdateListener: ((Int) -> Unit)? = null
 
     // Atom look-up map for bonds
     private val atomMap = HashMap<String, Atom>()
@@ -207,6 +221,9 @@ class ProteinRenderer : GLSurfaceView.Renderer {
     }
 
     override fun onSurfaceCreated(gl: GL10?, config: EGLConfig?) {
+        // Request unthrottled swap interval so renderer is capped by our 120 FPS pacer rather than 60 Hz VSync
+        EGL14.eglSwapInterval(EGL14.eglGetCurrentDisplay(), 0)
+
         // Dark modern background (#10141D)
         GLES20.glClearColor(0.063f, 0.078f, 0.114f, 1.0f)
         GLES20.glEnable(GLES20.GL_DEPTH_TEST)
@@ -312,6 +329,20 @@ class ProteinRenderer : GLSurfaceView.Renderer {
     }
 
     override fun onDrawFrame(gl: GL10?) {
+        val frameStartNs = System.nanoTime()
+        if (lastFrameStartNs != 0L) {
+            val sinceLastNs = frameStartNs - lastFrameStartNs
+            if (sinceLastNs in 1 until MIN_FRAME_INTERVAL_NS) {
+                val sleepNs = MIN_FRAME_INTERVAL_NS - sinceLastNs
+                try {
+                    Thread.sleep(sleepNs / 1_000_000L, (sleepNs % 1_000_000L).toInt())
+                } catch (_: InterruptedException) {
+                }
+            }
+        }
+        val renderStartNs = System.nanoTime()
+        lastFrameStartNs = renderStartNs
+
         GLES20.glClear(GLES20.GL_COLOR_BUFFER_BIT or GLES20.GL_DEPTH_BUFFER_BIT)
 
         val mol = molecule ?: return
@@ -360,6 +391,17 @@ class ProteinRenderer : GLSurfaceView.Renderer {
                     drawElementHighlight(atom)
                 }
             }
+        }
+
+        val nowNs = System.nanoTime()
+        if (nowNs - lastFpsUiUpdateNs >= FPS_UI_UPDATE_INTERVAL_NS) {
+            GLES20.glFinish()
+            val renderEndNs = System.nanoTime()
+            lastFpsUiUpdateNs = renderEndNs
+            val renderDurationNs = (renderEndNs - renderStartNs).coerceAtLeast(1L)
+            val effectiveFrameNs = MIN_FRAME_INTERVAL_NS + renderDurationNs
+            val fps = (1_000_000_000L / effectiveFrameNs).toInt().coerceIn(1, MAX_FPS)
+            onFpsUpdateListener?.invoke(fps)
         }
 
         // Handle screenshot capture if requested

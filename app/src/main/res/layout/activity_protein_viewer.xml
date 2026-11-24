@@ -77,7 +77,7 @@
                 android:layout_height="wrap_content"
                 android:textColor="#88A0C0"
                 android:textSize="12sp"
-                tools:text="43 Atoms • 44 Bonds" />
+                tools:text="43 Atoms • 44 Bonds • 60 FPS" />
         </LinearLayout>
 
         <ImageButton

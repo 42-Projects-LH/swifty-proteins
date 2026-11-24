@@ -92,21 +92,23 @@ To handle complex ligands without heap churn or serialization overhead, the appl
 
 ## 60 FPS Guarantee
 
-`ProteinSurfaceView` drives the OpenGL ES 2.0 rendering thread in continuous VSync-synchronized mode (`renderMode = GLSurfaceView.RENDERMODE_CONTINUOUSLY`), ensuring frame updates lock to the display refresh rate during 3D interaction. Inside `ProteinRenderer`, GPU rendering throughput is optimized by enabling hardware backface culling (`GLES20.glEnable(GLES20.GL_CULL_FACE)` with `GLES20.GL_BACK`, discarding back-facing triangles on every sphere and cylinder before fragment shading), hardware depth testing (`GLES20.glEnable(GLES20.GL_DEPTH_TEST)` with `GLES20.GL_LEQUAL`), indexed triangle drawing (`GLES20.glDrawElements`), and O(1) hash-map atom lookups (`atomMap`) when constructing bond transforms.
+`ProteinSurfaceView` drives the OpenGL ES 2.0 rendering thread in continuous VSync-synchronized mode (`renderMode = GLSurfaceView.RENDERMODE_CONTINUOUSLY`), ensuring frame updates lock to the display refresh rate during 3D interaction while `ProteinRenderer` enforces a nanosecond frame-interval cap at `120 FPS` (`MIN_FRAME_INTERVAL_NS = 1_000_000_000L / 120`) and samples instantaneous frame-to-frame delta times (`1_000_000_000L / frameDeltaNs`) every `250 ms` (`onFpsUpdateListener`) displayed directly in the top app bar subtitle (`tvMoleculeStats`, e.g., `"43 Atoms • 44 Bonds • 60 FPS"`). Inside `ProteinRenderer`, GPU rendering throughput is optimized by enabling hardware backface culling (`GLES20.glEnable(GLES20.GL_CULL_FACE)` with `GLES20.GL_BACK`, discarding back-facing triangles on every sphere and cylinder before fragment shading), hardware depth testing (`GLES20.glEnable(GLES20.GL_DEPTH_TEST)` with `GLES20.GL_LEQUAL`), indexed triangle drawing (`GLES20.glDrawElements`), and O(1) hash-map atom lookups (`atomMap`) when constructing bond transforms.
 
 ### Relevant Files in the Codebase
 
 | File | Type | Description |
 |---|---|---|
-| [`ProteinRenderer.kt`](file:///home/firstmate/GitHub/swifty-proteins/app/src/main/java/com/example/swiftyproteins/ui/viewer/gl/ProteinRenderer.kt) | Kotlin Source | Configures `GL_CULL_FACE`, `GL_DEPTH_TEST`, lightweight GLSL Blinn-Phong and wireframe shaders, and `atomMap` O(1) bond endpoint lookup. |
+| [`ProteinRenderer.kt`](file:///home/firstmate/GitHub/swifty-proteins/app/src/main/java/com/example/swiftyproteins/ui/viewer/gl/ProteinRenderer.kt) | Kotlin Source | Configures `GL_CULL_FACE`, `GL_DEPTH_TEST`, 120 FPS frame pacing, instantaneous frame-delta FPS measurement (`onFpsUpdateListener`), and `atomMap` O(1) bond endpoint lookup. |
+| [`ProteinViewerActivity.kt`](file:///home/firstmate/GitHub/swifty-proteins/app/src/main/java/com/example/swiftyproteins/ui/viewer/ProteinViewerActivity.kt) | Kotlin Source | Subscribes to `renderer.onFpsUpdateListener` and updates the live `"• {fps} FPS"` readout in `tvMoleculeStats`. |
 | [`ProteinSurfaceView.kt`](file:///home/firstmate/GitHub/swifty-proteins/app/src/main/java/com/example/swiftyproteins/ui/viewer/gl/ProteinSurfaceView.kt) | Kotlin Source | Initializes the OpenGL ES 2.0 context with `RENDERMODE_CONTINUOUSLY` and processes touch gestures with minimal latency. |
 | [`SphereMesh.kt`](file:///home/firstmate/GitHub/swifty-proteins/app/src/main/java/com/example/swiftyproteins/ui/viewer/gl/SphereMesh.kt) | Kotlin Source | Renders indexed triangle meshes via `GLES20.glDrawElements(GLES20.GL_TRIANGLES, ...)`. |
 | [`CylinderMesh.kt`](file:///home/firstmate/GitHub/swifty-proteins/app/src/main/java/com/example/swiftyproteins/ui/viewer/gl/CylinderMesh.kt) | Kotlin Source | Renders indexed cylinder meshes via `GLES20.glDrawElements(GLES20.GL_TRIANGLES, ...)`. |
 
 ### How to test
 
-1. Open a complex ligand (e.g., `ATP`, `HEM`, or `FAD`) in `ProteinViewerActivity` and continuously rotate, pinch-to-zoom, and pan the model with **Labels** and **Atom Highlighting** active: verify fluid 60 FPS motion with no stutter or lag.
-2. Optionally inspect GPU frame timing statistics on the connected device via ADB (targeting `< 16.6 ms` per frame):
+1. Open a complex ligand (e.g., `ATP`, `HEM`, or `FAD`) in `ProteinViewerActivity` and observe the live FPS readout in the top bar subtitle (`"{Atoms} Atoms • {Bonds} Bonds • {FPS} FPS"`).
+2. Continuously rotate, pinch-to-zoom, and pan the model with **Labels** and **Atom Highlighting** active: verify that the live FPS counter maintains a steady 60–120 FPS (capped at `120 FPS` on high-refresh-rate displays) with no stutter or lag.
+3. Optionally inspect GPU frame timing statistics on the connected device via ADB (targeting `< 16.6 ms` per frame):
    ```bash
    adb shell dumpsys gfxinfo com.example.swiftyproteins framestats
    ```

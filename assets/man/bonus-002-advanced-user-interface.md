@@ -1,14 +1,22 @@
 # Advanced User Interface
 
-## Overview
+The **Advanced User Interface** bonus features enhance the user experience and visual aesthetic of Swifty Proteins.
 
-The **Advanced User Interface** bonus enhances the user experience and visual aesthetic of Swifty Proteins far beyond stock Android views. It incorporates custom elevation card lists, smooth activity transitions, an OLED-optimized dark theme palette, informative onboarding states, and streamlined contextual toolbar controls.
+Status | Feature | Decription
+:--- | :--- | :---
+⚫ | **Custom Table/List Cells** | Design beautiful custom cells for the ligand list with icons, previews, or additional information.
+⚫ | **Smooth Animations** | Add polished transitions between views, animated loading states, and micro-interactions.
+⚫ | **Dark Mode** | Implement a complete dark mode theme that works throughout the app, including the 3D view with appropriate lighting adjustments.
+⚫ | **Onboarding** | Create an onboarding flow for first-time users explaining how to use the app and its features.
+⚫ | **Settings Screen** | Add a settings view where users can customize preferences (default visualization model, color schemes, etc.).
 
----
+>[!NOTE]
+>⚪ = Implemented
+>⚫ = Not implemented
 
 ## Feature Specifications
 
-### 1. Custom Table/List Cells
+### Custom Table/List Cells
 The protein catalog uses a custom Material card layout (`item_protein.xml`) specifically designed for density and readability:
 - **Elemental Badge**: Circular gradient container displaying the first letter of the ligand code.
 - **Ligand Identifier**: Crisp, high-contrast monospace typography.

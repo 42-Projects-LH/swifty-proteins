@@ -4,7 +4,7 @@ The **Multiple Visualization Models** bonus feature expands the rendering pipeli
 
 Model | Example
 :--- | :---
-**Ball & Stick** (Mandatory baseline) | ![ball&stick](assets/imgs/caffeine-3d-model-ballnstick.png)
+**Ball & Stick** (Mandatory baseline) | ![ball&stick](./assets/imgs/caffeine-3d-model-ballnstick.png)
 **Space-Filling (CPK / Calotte Model)** | ![spacefilling](assets/imgs/caffeine-3d-model-space-filling.png)
 **Stick (Licorice Model)** | ![stick](assets/imgs/caffeine-3d-model-stick.png)
 **Wireframe (Line Model)** | ![wireframe](assets/imgs/caffeine-3d-model-wireframe.png)

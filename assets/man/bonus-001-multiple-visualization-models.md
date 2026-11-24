@@ -4,9 +4,9 @@ The **Multiple Visualization Models** bonus feature expands the rendering pipeli
 
 Model | Example
 :--- | :---
-**Ball & Stick** (Mandatory baseline) | ![ball&stick](https://upload.wikimedia.org/wikipedia/commons/c/ca/Proline_model.jpg)
-**Space-Filling (CPK / Calotte Model)** | ![spacefilling](https://thumb.wikimedia.org/wikipedia/commons/thumb/7/77/Thc.pdb.gif/250px-Thc.pdb.gif)
-**Stick (Licorice Model)** | ![stick](https://upload.wikimedia.org/wikipedia/commons/6/66/Anisole-3D-sticks.png)
+**Ball & Stick** (Mandatory baseline) | ![ball&stick]()
+**Space-Filling (CPK / Calotte Model)** | ![spacefilling]()
+**Stick (Licorice Model)** | ![stick]()
 **Wireframe (Line Model)** |
 
 Users can cycle dynamically between representations with a single tap of an on-screen UI control. Model transitions occur instantaneously in memory without reloading, re-parsing, or re-downloading the molecule data.

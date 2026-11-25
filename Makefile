@@ -44,14 +44,16 @@ else
 	ADB_TARGET	:=
 endif
 
-# Ensure SDK platform-tools is on PATH for adb
+# Ensure SDK platform-tools and emulator are on PATH
 ifdef ANDROID_HOME
-	export PATH := $(ANDROID_HOME)/platform-tools:$(PATH)
+	export PATH := $(ANDROID_HOME)/platform-tools:$(ANDROID_HOME)/emulator:$(PATH)
 endif
 
 ADB		:= adb $(ADB_TARGET)
 ADB_USB		:= adb -d
 ADB_EMU		:= adb -e
+EMULATOR	:= emulator
+AVD		?=
 
 # ------------------------------------------------------------
 #  General Variables
@@ -83,7 +85,7 @@ WHITE    := $(shell printf '\033[1;97m')
 #  RULES
 # ============================================================
 
-.PHONY: all build release install install-usb install-emu \
+.PHONY: all build release emu install install-usb install-emu \
         start start-usb start-emu run run-usb run-emu \
         stop restart clear-data clear-data-usb uninstall uninstall-usb \
         bio-success bio-fail logs logs-usb logcat-clear devices \
@@ -125,10 +127,34 @@ install-usb: build
 	@$(ECHO) ">>> $(GREEN)Installation on USB phone successful.$(RESET)"
 
 # ------------------------------------------------------------
+#  emu — Launch Android emulator in background if not running
+# ------------------------------------------------------------
+
+emu:
+	@if ! $(ADB_EMU) get-state >/dev/null 2>&1; then \
+		AVD_NAME="$(AVD)"; \
+		if [ -z "$$AVD_NAME" ]; then \
+			AVD_NAME=$$($(EMULATOR) -list-avds 2>/dev/null | head -n 1); \
+		fi; \
+		if [ -z "$$AVD_NAME" ]; then \
+			$(ECHO) ">>> $(RED)No Android Virtual Device (AVD) found. Create one first with avdmanager or Android Studio.$(RESET)"; \
+			exit 1; \
+		fi; \
+		$(ECHO) ">>> $(YELLOW)Starting Android emulator ($$AVD_NAME)...$(RESET)"; \
+		nohup $(EMULATOR) -avd "$$AVD_NAME" >/dev/null 2>&1 & \
+		$(ECHO) ">>> $(YELLOW)Waiting for emulator to finish booting...$(RESET)"; \
+		$(ADB_EMU) wait-for-device; \
+		while [ "$$($(ADB_EMU) shell getprop sys.boot_completed 2>/dev/null | tr -d '\r')" != "1" ]; do \
+			sleep 1; \
+		done; \
+		$(ECHO) ">>> $(GREEN)Emulator ($$AVD_NAME) is ready.$(RESET)"; \
+	fi
+
+# ------------------------------------------------------------
 #  install-emu — Install debug APK on running emulator (-e)
 # ------------------------------------------------------------
 
-install-emu: build
+install-emu: build emu
 	@$(ECHO) ">>> $(YELLOW)Installing APK on Android emulator...$(RESET)"
 	@$(ADB_EMU) install -r -d $(APK_DEBUG)
 	@$(ECHO) ">>> $(GREEN)Installation on emulator successful.$(RESET)"
@@ -430,11 +456,12 @@ help:
 	@$(ECHO) "     $(CYAN)all$(RESET)              Build debug APK"
 	@$(ECHO) "     $(CYAN)build$(RESET)            Compile debug APK ($(APK_DEBUG))"
 	@$(ECHO) "     $(CYAN)release$(RESET)          Compile unsigned release APK"
+	@$(ECHO) "     $(CYAN)emu$(RESET)              Boot Android emulator if not already running (AVD=<name>)"
 	@$(ECHO) "     $(CYAN)install-usb$(RESET)      Build & install APK directly on USB-connected phone (-d)"
-	@$(ECHO) "     $(CYAN)install-emu$(RESET)      Build & install APK on running emulator (-e)"
+	@$(ECHO) "     $(CYAN)install-emu$(RESET)      Build, auto-boot emulator if needed, & install APK (-e)"
 	@$(ECHO) "     $(CYAN)install$(RESET)          Build & install APK on default/active ADB target"
 	@$(ECHO) "     $(CYAN)start-usb$(RESET)        Build, install, and launch app on USB phone"
-	@$(ECHO) "     $(CYAN)start-emu$(RESET)        Build, install, and launch app on emulator"
+	@$(ECHO) "     $(CYAN)start-emu$(RESET)        Build, auto-boot emulator if needed, install, & launch app"
 	@$(ECHO) "     $(CYAN)start$(RESET)            Build, install, and launch app on active target"
 	@$(ECHO) "     $(CYAN)run / run-usb$(RESET)    Cold-launch SplashActivity on device"
 	@$(ECHO) "     $(CYAN)stop$(RESET)             Force-stop the app process"

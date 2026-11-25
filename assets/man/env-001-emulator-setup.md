@@ -2,9 +2,7 @@
 
 This guide explains how to configure the Android SDK, Gradle cache, and an Android Virtual Device (AVD) emulator—both on a standard development workstation and on a **42 school computer** (where `$HOME` has a strict disk quota and large files must reside in `~/goinfre`).
 
----
-
-## 1. Architecture & Makefile Auto-Detection
+## Architecture & Makefile Auto-Detection
 
 The project's [`Makefile`](../../Makefile) automatically handles SDK resolution, stale `local.properties` cleanup, and emulator lifecycle management:
 
@@ -18,9 +16,7 @@ The project's [`Makefile`](../../Makefile) automatically handles SDK resolution,
 - **Automatic `PATH` Export**: Prepends `$(ANDROID_HOME)/platform-tools` (`adb`) and `$(ANDROID_HOME)/emulator` (`emulator`) to `PATH`.
 - **Auto-Boot Emulator (`make emu` / `make start-emu`)**: If no emulator is currently running (`adb -e get-state`), `make start-emu` (or `make install-emu` / `make emu`) automatically finds the first available AVD (or `AVD=<name>`), launches it in the background, waits until Android finishes booting (`sys.boot_completed == 1`), installs the APK, and launches the app.
 
----
-
-## 2. Setting Up on a 42 School PC (`goinfre` Quota-Safe Setup)
+## Setting Up on a 42 School PC (`goinfre` Quota-Safe Setup)
 
 On 42 school machines, `$HOME` is stored on NFS with a small quota (typically 5 GB), whereas `~/goinfre` is fast local storage with plenty of free space. Because the Android SDK, Gradle cache (`~/.gradle`), and emulator system images (`~/.android/avd`) require several gigabytes, place them inside `~/goinfre`.
 
@@ -60,8 +56,6 @@ fi
 > [!NOTE]
 > Once `~/goinfre/Android/Sdk/licenses/android-sdk-license` exists, running `make build` will automatically download `build-tools`, `platforms`, and `platform-tools` (`adb`) via Gradle without needing Android Studio.
 
----
-
 ### Step 2: Install the Android Emulator & Create a Virtual Device (CLI)
 
 If the Android Emulator and a virtual phone (AVD) are not yet installed in `~/goinfre/Android/Sdk`, you can install them 100% from the terminal without opening Android Studio:
@@ -89,9 +83,7 @@ echo "no" | ~/goinfre/Android/Sdk/cmdline-tools/latest/bin/avdmanager \
     --force
 ```
 
----
-
-## 3. Launching and Testing on the Emulator
+## Launching and Testing on the Emulator
 
 ### Build, Auto-Boot Emulator, Install, and Launch
 
@@ -113,9 +105,7 @@ To boot the emulator alone without installing or launching the app:
 make emu
 ```
 
----
-
-## 4. Simulating Biometrics on the Emulator
+## Simulating Biometrics on the Emulator
 
 To test Fingerprint / Biometric authentication ([`feat-002-login-view.md`](feat-002-login-view.md)) on the emulator:
 
@@ -138,9 +128,7 @@ To test Fingerprint / Biometric authentication ([`feat-002-login-view.md`](feat-
      make bio-fail
      ```
 
----
-
-## 5. Emulator Makefile Commands Reference
+## Emulator Makefile Commands Reference
 
 | Command | Description |
 |---|---|

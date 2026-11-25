@@ -44,6 +44,11 @@ else
 	ADB_TARGET	:=
 endif
 
+# Ensure SDK platform-tools is on PATH for adb
+ifdef ANDROID_HOME
+	export PATH := $(ANDROID_HOME)/platform-tools:$(PATH)
+endif
+
 ADB		:= adb $(ADB_TARGET)
 ADB_USB		:= adb -d
 ADB_EMU		:= adb -e

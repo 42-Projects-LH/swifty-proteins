@@ -19,7 +19,7 @@ The mandatory part of the evaluation comprises four core functional areas. All f
 * **Hardware-Backed Security**: Zero plaintext password storage; Android KeyStore `MasterKey` (`AES256_GCM`), `EncryptedSharedPreferences` (`AES256_SIV` / `AES256_GCM`), and salted `SHA-256` hashing (`SecureRandom` 16-byte salt).
 * **Background Auto-Lock**: `ProcessLifecycleOwner` lifecycle tracking locks active sessions upon backgrounding (Home button, app switcher, lock screen), requiring re-authentication on return.
 * **Key Files**: [`LoginActivity.kt`](../app/src/main/java/com/example/swiftyproteins/ui/auth/LoginActivity.kt), [`SecureStorage.kt`](../app/src/main/java/com/example/swiftyproteins/util/SecureStorage.kt), [`SwiftyProteinsApp.kt`](../app/src/main/java/com/example/swiftyproteins/SwiftyProteinsApp.kt), [`AppLifecycleObserver.kt`](../app/src/main/java/com/example/swiftyproteins/util/AppLifecycleObserver.kt).
-* **Testing**: `make bio-success`, `make bio-fail`, `make clear-data`, backgrounding auto-lock verification.
+* **Testing**: `make bio-success`, `make bio-fail`, `make clear-data`, `make inspect-prefs`, backgrounding auto-lock verification.
 
 ### [📂 Protein List View](man/feat-003-protein-list-view.md)
 * **Ligand Catalog**: Complete loading of all candidate chemical ligands from bundled `ligands.txt` into an optimized `RecyclerView`.

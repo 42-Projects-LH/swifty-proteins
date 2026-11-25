@@ -128,6 +128,9 @@ make bio-fail
 # Reset all stored credentials and KeyStore keys to test clean slate
 make clear-data
 
+# Inspect on-device shared_prefs directory and encrypted XML ciphertext
+make inspect-prefs
+
 # Stream authentication and security logs
 make logs
 ```

@@ -89,7 +89,7 @@ WHITE    := $(shell printf '\033[1;97m')
         start start-usb start-emu run run-usb run-emu \
         stop restart clear-data clear-data-usb uninstall uninstall-usb \
         bio-success bio-fail logs logs-usb logcat-clear devices \
-        screenshot pull-photos shell test lint clean fclean re check-sdk check-cif help
+        screenshot pull-photos shell test lint clean fclean re check-sdk check-cif inspect-prefs inspect-prefs-usb help
 
 # ------------------------------------------------------------
 #  all — Default target: Build debug APK
@@ -440,6 +440,22 @@ check-cif:
 	@$(ECHO) ""
 
 # ------------------------------------------------------------
+#  inspect-prefs — Inspect encrypted SharedPreferences on device
+# ------------------------------------------------------------
+
+inspect-prefs:
+	@$(ECHO) ""
+	@$(ECHO) " >>> $(YELLOW)Listing shared_prefs files via run-as:$(RESET)"
+	-@$(ADB) shell run-as $(PACKAGE) ls -l shared_prefs/
+	@$(ECHO) ""
+	@$(ECHO) " >>> $(YELLOW)Encrypted file content (proving no plain text passwords):$(RESET)"
+	-@$(ADB) shell run-as $(PACKAGE) cat shared_prefs/secure_user_prefs.xml 2>/dev/null || $(ECHO) "   $(RED)No prefs found yet. Register/log in first.$(RESET)"
+	@$(ECHO) ""
+
+inspect-prefs-usb:
+	@$(MAKE) inspect-prefs ADB_TARGET="-d"
+
+# ------------------------------------------------------------
 #  re — Clean everything and rebuild
 # ------------------------------------------------------------
 
@@ -482,6 +498,7 @@ help:
 	@$(ECHO) "     $(CYAN)lint$(RESET)             Run Android lint checks"
 	@$(ECHO) "     $(CYAN)check-sdk$(RESET)        Display project SDK config & machine SDK versions"
 	@$(ECHO) "     $(CYAN)check-cif$(RESET)        Display RCSB .cif endpoint and parser implementation"
+	@$(ECHO) "     $(CYAN)inspect-prefs$(RESET)     Show on-device encrypted shared_prefs files & ciphertext"
 	@$(ECHO) "     $(CYAN)clean$(RESET)            Clean Gradle build artifacts"
 	@$(ECHO) "     $(CYAN)fclean$(RESET)           Full reset: Gradle clean, remove screenshots, uninstall"
 	@$(ECHO) "     $(CYAN)re$(RESET)               Clean everything and rebuild"

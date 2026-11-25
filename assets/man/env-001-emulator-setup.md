@@ -141,3 +141,4 @@ To test Fingerprint / Biometric authentication ([`feat-002-login-view.md`](feat-
 | `make bio-fail` | Send invalid fingerprint event (`adb -e emu finger touch 2`) |
 | `make devices` | List all connected emulators and physical USB devices (`adb devices -l`) |
 | `make check-sdk` | Display project SDK configuration, detected `ANDROID_HOME` platforms, and Java runtime |
+| `make inspect-prefs` | List `shared_prefs/` and inspect encrypted `secure_user_prefs.xml` ciphertext on device |

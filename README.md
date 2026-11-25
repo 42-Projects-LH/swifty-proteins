@@ -81,6 +81,9 @@ make start-usb
 | `make bio-success` | Simulate a valid fingerprint touch on emulator (`finger touch 1`) |
 | `make bio-fail` | Simulate an unrecognized fingerprint touch on emulator (`finger touch 2`) |
 | `make clear-data` | Wipe app credentials and KeyStore data for defense testing |
+| `make inspect-prefs` | List `shared_prefs/` and inspect encrypted `secure_user_prefs.xml` ciphertext on device |
+| `make check-sdk` | Display project SDK configuration and host environment Java/SDK versions |
+| `make check-cif` | Display RCSB `.cif` endpoint and CIF parser loop implementation |
 | `make pull-photos` | Pull exported 3D protein snapshots from device to local directory |
 | `make screenshot` | Capture the current device screen |
 | `make logs` | Stream filtered real-time logcat output for `com.example.swiftyproteins` |

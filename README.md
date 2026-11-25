@@ -47,7 +47,7 @@ graph LR
 ### Prerequisites
 - **Java Development Kit**: JDK 17 or JDK 21
 - **Android SDK**: Android API 37 platform, Build-Tools, and Platform-Tools (`adb`)
-- **Device / Emulator**: Android 8.0+ (API 26+) physical device with USB debugging enabled, or an Android Virtual Device (AVD) with Google Play Services
+- **Device / Emulator**: Android 8.0+ (API 26+) physical device with USB debugging enabled, or an Android Virtual Device (AVD) with Google Play Services (see [📂 **Android Emulator & 42 School Environment Setup**](assets/man/env-001-emulator-setup.md) for full CLI setup and `goinfre` configuration)
 
 ### Build & Compilation
 ```bash
@@ -74,8 +74,9 @@ make start-usb
 | Command | Action |
 |---|---|
 | `make all` / `make build` | Compile the debug APK (`app/build/outputs/apk/debug/app-debug.apk`) |
+| `make emu` | Boot the Android emulator in the background if not already running |
 | `make start` | Build, install, and launch cold start on default active device |
-| `make start-emu` | Build, install, and launch cold start on running Android emulator |
+| `make start-emu` | Build, auto-boot emulator if needed, install, and launch cold start on Android emulator |
 | `make start-usb` | Build, install, and launch cold start on USB physical phone |
 | `make bio-success` | Simulate a valid fingerprint touch on emulator (`finger touch 1`) |
 | `make bio-fail` | Simulate an unrecognized fingerprint touch on emulator (`finger touch 2`) |

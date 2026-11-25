@@ -82,10 +82,20 @@ The bonus section extends the application with advanced biochemical visualizatio
 * **Favorites System**: Persistent bookmarking with `FavoritesManager` in `SharedPreferences`, supporting real-time catalog filtering.
 * **Key Files**: [`ProteinViewerActivity.kt`](../app/src/main/java/com/example/swiftyproteins/ui/viewer/ProteinViewerActivity.kt), [`FavoritesManager.kt`](../app/src/main/java/com/example/swiftyproteins/data/favorites/FavoritesManager.kt), [`file_paths.xml`](../app/src/main/res/xml/file_paths.xml).
 
+## Environment & Tooling
+
+### [📂 Android Emulator and 42 School Environment Setup](man/env-001-emulator-setup.md)
+* **Makefile SDK & Emulator Automation**: Automatic `ANDROID_HOME` detection across `~/goinfre`, `/sgoinfre`, and `$HOME`, stale `local.properties` cleanup, and background emulator auto-boot via `make start-emu` / `make emu`.
+* **42 School PC (`goinfre`) Setup**: Step-by-step commands to symlink `~/.gradle` and `~/.android/avd` into `~/goinfre` to avoid `$HOME` NFS disk quota limits.
+* **Headless CLI Emulator Installation**: Terminal-only setup using `sdkmanager` and `avdmanager` to install `emulator`, download an x86_64 system image, and create a `pixel` virtual device without opening Android Studio.
+* **Biometric Simulation**: Enrolling and testing virtual fingerprints with `make bio-success` and `make bio-fail`.
+* **Key Files**: [`Makefile`](../Makefile).
+
 ## Quick Reference Index
 
 | ID | Title | Category | Status | Documentation Link |
 |---|---|---|---|---|
+| `env-001` | Android Emulator and 42 School Environment Setup | Environment | Completed | [man/env-001-emulator-setup.md](man/env-001-emulator-setup.md) |
 | `feat-001` | Application Icon and Launch Screen | Mandatory | Completed | [man/feat-001-app-icon-and-launch-screen.md](man/feat-001-app-icon-and-launch-screen.md) |
 | `feat-002` | Login View | Mandatory | Completed | [man/feat-002-login-view.md](man/feat-002-login-view.md) |
 | `feat-003` | Protein List View | Mandatory | Completed | [man/feat-003-protein-list-view.md](man/feat-003-protein-list-view.md) |

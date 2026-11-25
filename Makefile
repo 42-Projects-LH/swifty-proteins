@@ -13,15 +13,15 @@ SCREENSHOT_DIR	:= screenshots
 
 # Auto-detect ANDROID_HOME if not already exported in the environment
 ifndef ANDROID_HOME
-ifneq ($(wildcard $(HOME)/Android/Sdk/platforms),)
-	export ANDROID_HOME := $(HOME)/Android/Sdk
-else ifneq ($(wildcard $(HOME)/goinfre/Android/Sdk/platforms),)
+ifneq ($(wildcard $(HOME)/goinfre/Android/Sdk),)
 	export ANDROID_HOME := $(HOME)/goinfre/Android/Sdk
-else ifneq ($(wildcard /goinfre/$(USER)/Android/Sdk/platforms),)
+else ifneq ($(wildcard /goinfre/$(USER)/Android/Sdk),)
 	export ANDROID_HOME := /goinfre/$(USER)/Android/Sdk
-else ifneq ($(wildcard /sgoinfre/goinfre/Perso/$(USER)/Android/Sdk/platforms),)
+else ifneq ($(wildcard /sgoinfre/goinfre/Perso/$(USER)/Android/Sdk),)
 	export ANDROID_HOME := /sgoinfre/goinfre/Perso/$(USER)/Android/Sdk
-else ifneq ($(wildcard /usr/lib/android-sdk/platforms),)
+else ifneq ($(wildcard $(HOME)/Android/Sdk),)
+	export ANDROID_HOME := $(HOME)/Android/Sdk
+else ifneq ($(wildcard /usr/lib/android-sdk),)
 	export ANDROID_HOME := /usr/lib/android-sdk
 endif
 endif

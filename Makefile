@@ -15,10 +15,25 @@ SCREENSHOT_DIR	:= screenshots
 ifndef ANDROID_HOME
 ifneq ($(wildcard $(HOME)/Android/Sdk/platforms),)
 	export ANDROID_HOME := $(HOME)/Android/Sdk
+else ifneq ($(wildcard $(HOME)/goinfre/Android/Sdk/platforms),)
+	export ANDROID_HOME := $(HOME)/goinfre/Android/Sdk
+else ifneq ($(wildcard /goinfre/$(USER)/Android/Sdk/platforms),)
+	export ANDROID_HOME := /goinfre/$(USER)/Android/Sdk
+else ifneq ($(wildcard /sgoinfre/goinfre/Perso/$(USER)/Android/Sdk/platforms),)
+	export ANDROID_HOME := /sgoinfre/goinfre/Perso/$(USER)/Android/Sdk
 else ifneq ($(wildcard /usr/lib/android-sdk/platforms),)
 	export ANDROID_HOME := /usr/lib/android-sdk
 endif
 endif
+
+# Helper to remove stale local.properties (e.g. pointing to cleared goinfre or another PC)
+ENSURE_SDK = @if [ -f local.properties ]; then \
+	SDK_DIR=$$(sed -n 's/^sdk\.dir=//p' local.properties | head -n 1); \
+	if [ -n "$$SDK_DIR" ] && [ ! -d "$$SDK_DIR" ]; then \
+		$(ECHO) ">>> $(YELLOW)Removing stale local.properties (missing: $$SDK_DIR)...$(RESET)"; \
+		$(RM) local.properties; \
+	fi; \
+fi
 
 # Device targeting:
 # Pass DEVICE=<serial> to target a specific device, e.g.:
@@ -80,6 +95,7 @@ all: build
 # ------------------------------------------------------------
 
 build:
+	$(ENSURE_SDK)
 	@$(ECHO) ">>> $(YELLOW)Building debug APK...$(RESET)"
 	@$(GRADLE) assembleDebug
 	@$(ECHO) ">>> $(GREEN)Debug APK built at $(APK_DEBUG)$(RESET)"
@@ -89,6 +105,7 @@ build:
 # ------------------------------------------------------------
 
 release:
+	$(ENSURE_SDK)
 	@$(ECHO) ">>> $(YELLOW)Building release APK...$(RESET)"
 	@$(GRADLE) assembleRelease
 	@$(ECHO) ">>> $(GREEN)Release APK built at $(APK_RELEASE)$(RESET)"
@@ -302,6 +319,7 @@ shell:
 # ------------------------------------------------------------
 
 test:
+	$(ENSURE_SDK)
 	@$(ECHO) ">>> $(YELLOW)Running unit tests...$(RESET)"
 	@$(GRADLE) test
 	@$(ECHO) ">>> $(GREEN)All unit tests passed.$(RESET)"
@@ -311,6 +329,7 @@ test:
 # ------------------------------------------------------------
 
 lint:
+	$(ENSURE_SDK)
 	@$(ECHO) ">>> $(YELLOW)Running Android lint checks...$(RESET)"
 	@$(GRADLE) lint
 	@$(ECHO) ">>> $(GREEN)Lint analysis completed.$(RESET)"
@@ -320,6 +339,7 @@ lint:
 # ------------------------------------------------------------
 
 clean:
+	$(ENSURE_SDK)
 	@$(ECHO) ">>> $(YELLOW)Cleaning Gradle build cache & artifacts...$(RESET)"
 	@$(GRADLE) clean
 	@$(ECHO) ">>> $(CYAN)Clean completed.$(RESET)"
@@ -353,9 +373,12 @@ check-sdk:
 	elif [ -n "$$ANDROID_SDK_ROOT" ] && [ -d "$$ANDROID_SDK_ROOT/platforms" ]; then \
 		$(ECHO) "   Installed SDK platforms in $$ANDROID_SDK_ROOT/platforms/:"; \
 		ls -1 "$$ANDROID_SDK_ROOT/platforms" 2>/dev/null | sed 's/^/     - /'; \
-	elif [ -d "/home/firstmate/Android/Sdk/platforms" ]; then \
-		$(ECHO) "   Installed SDK platforms in /home/firstmate/Android/Sdk/platforms/:"; \
-		ls -1 "/home/firstmate/Android/Sdk/platforms" 2>/dev/null | sed 's/^/     - /'; \
+	elif [ -d "$(HOME)/Android/Sdk/platforms" ]; then \
+		$(ECHO) "   Installed SDK platforms in $(HOME)/Android/Sdk/platforms/:"; \
+		ls -1 "$(HOME)/Android/Sdk/platforms" 2>/dev/null | sed 's/^/     - /'; \
+	elif [ -d "$(HOME)/goinfre/Android/Sdk/platforms" ]; then \
+		$(ECHO) "   Installed SDK platforms in $(HOME)/goinfre/Android/Sdk/platforms/:"; \
+		ls -1 "$(HOME)/goinfre/Android/Sdk/platforms" 2>/dev/null | sed 's/^/     - /'; \
 	elif [ -d "/usr/lib/android-sdk/platforms" ]; then \
 		$(ECHO) "   Installed SDK platforms in /usr/lib/android-sdk/platforms/:"; \
 		ls -1 "/usr/lib/android-sdk/platforms" 2>/dev/null | sed 's/^/     - /'; \
